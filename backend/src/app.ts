@@ -3,9 +3,13 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+
 import { prisma } from "./config/PrismaClient";
 
+import router from "./routes/Router";
+
 import Logger from "./config/logger";
+
 
 class App {
     private app = express();
@@ -16,6 +20,9 @@ class App {
 
         // Solve CORS
         this.app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+
+        // Load routes
+        this.app.use(router);
 
         this.startApp();
     }
