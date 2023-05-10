@@ -16,6 +16,23 @@ model User {
   name String @db.VarChar(20)
   password String
   createdAt DateTime @default(now())
+  appointments Appointment[]
 
   @@map("user")
+}
+
+model Appointment {
+  id String @id @default(uuid())
+  type String
+  title String
+  description String?
+  priority String
+  date String
+  time String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId String
+  fk_userId User @relation(fields: [userId], references: [id])
+
+  @@map("appointment")
 }
