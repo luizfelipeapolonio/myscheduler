@@ -12,5 +12,5 @@ export interface ITypedResponse<T> extends Response {
 export interface IJSONResponse<T> {
     status: "error" | "success",
     message: string;
-    payload: T
+    payload: T;
 }
