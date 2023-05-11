@@ -17,7 +17,8 @@ export class UserRoutes {
             return res.send("Rotas de usuário funcionando!");
         });
 
-        this.router.post("/", validation.userCreateValidation, user.createAndSignInUser);
+        this.router.post("/register", validation.userCreateValidation, user.createAndSignInUser);
+        this.router.post("/login", validation.userSignInValidation, user.signIn);
 
         return this.router;
     }

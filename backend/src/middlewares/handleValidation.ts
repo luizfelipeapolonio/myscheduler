@@ -2,7 +2,9 @@
 import { Request, NextFunction } from "express";
 import { IJSONResponse, ITypedResponse } from "../types/shared.types";
 
-import { userCreateSchema } from "../validation/userSchemas";
+import { userCreateSchema, userSignInSchema } from "../validation/userSchemas";
+
+import Logger from "../config/logger";
 
 interface validationErrors {
     path: string | number;
@@ -14,15 +16,39 @@ export class handleValidation {
         const validation = await userCreateSchema.safeParseAsync(req.body);
 
         if(validation.success) {
+            Logger.info("Usuário validado com sucesso!");
             return next();
         } else {
             const errors: validationErrors[] = validation.error.issues.map((errorObject) => {
                 return { path: errorObject.path[0], message: errorObject.message };
             });
 
+            Logger.error("Erro na validação de criação de usuário --> " + `Erro: ${JSON.stringify(validation.error.issues)}`);
+
             return res.status(422).json({
                 status: "error",
                 message: "Erro na validação de criação de usuário",
+                payload: errors
+            });
+        }
+    }
+
+    async userSignInValidation(req: Request, res: ITypedResponse<IJSONResponse<validationErrors[]>>, next: NextFunction) {
+        const validation = await userSignInSchema.safeParseAsync(req.body);
+
+        if(validation.success) {
+            Logger.info("Usuário validado com sucesso!");
+            return next();
+        } else {
+            const errors: validationErrors[] = validation.error.issues.map((errorObject) => {
+                return { path: errorObject.path[0], message: errorObject.message };
+            });
+
+            Logger.error("Erro na validação de login --> " + `Erro: ${JSON.stringify(validation.error.issues)}`);
+
+            return res.status(422).json({
+                status: "error",
+                message: "Erro na validação de login de usuário",
                 payload: errors
             });
         }

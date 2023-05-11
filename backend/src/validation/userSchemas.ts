@@ -19,3 +19,10 @@ export const userCreateSchema = z.object({
     message: "As senhas devem ser iguais",
     path: ["confirmPassword"]
 });
+
+export const userSignInSchema = z.object({
+    email: z.string({
+        required_error: "O e-mail é obrigatório"
+    }).email({ message: "Insira um e-mail válido" }),
+    password: z.string({ required_error: "A senha é obrigatória" })
+});
