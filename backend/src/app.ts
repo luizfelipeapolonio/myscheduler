@@ -5,10 +5,9 @@ import express from "express";
 import cors from "cors";
 
 import { prisma } from "./config/PrismaClient";
-
 import router from "./routes/Router";
-
 import Logger from "./config/logger";
+import morganMiddleware from "./middlewares/morganMiddleware";
 
 
 class App {
@@ -20,6 +19,8 @@ class App {
 
         // Solve CORS
         this.app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+
+        this.app.use(morganMiddleware);
 
         // Load routes
         this.app.use(router);
