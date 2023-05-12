@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 
 // Middlewares
 import { handleValidation } from "../middlewares/handleValidation";
+import { authGuard } from "../middlewares/authGuard";
 
 // Controller
 import { UserController } from "../controllers/UserController";
@@ -12,6 +13,7 @@ export class UserRoutes {
     routes() {
         const validation = new handleValidation();
         const user = new UserController();
+        const auth = new authGuard();
 
         this.router.get("/test", (req: Request, res: Response) => {
             return res.send("Rotas de usuário funcionando!");
@@ -19,6 +21,7 @@ export class UserRoutes {
 
         this.router.post("/register", validation.userCreateValidation, user.createAndSignInUser);
         this.router.post("/login", validation.userSignInValidation, user.signIn);
+        this.router.get("/user", auth.execute, user.getCurrentUser);
 
         return this.router;
     }

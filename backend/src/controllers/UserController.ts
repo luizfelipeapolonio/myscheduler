@@ -3,8 +3,9 @@ import bcrypt from "bcryptjs";
 
 // Types
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
-import { userCreateBody, userSignInBody, NewUser, SignedInUser } from "../types/user.types";
+import { userCreateBody, userSignInBody, NewUser, SignedInUser, AuthUser } from "../types/user.types";
 import { User } from "@prisma/client";
+import { Request } from "express";
 
 import Logger from "../config/logger";
 
@@ -145,5 +146,15 @@ export class UserController {
                 payload: null
             });
         }
+    }
+
+    getCurrentUser(req: Request, res: ITypedResponse<IJSONResponse<AuthUser>>) {
+        const authUser: AuthUser = res.locals.authUser;
+
+        return res.status(200).json({
+            status: "success",
+            message: "Usuário logado",
+            payload: authUser
+        });
     }
 }
