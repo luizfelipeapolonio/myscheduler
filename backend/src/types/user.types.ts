@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { User } from "@prisma/client";
 import { userCreateSchema, userSignInSchema } from "../validation/userSchemas";
 
 export type userCreateBody = z.infer<typeof userCreateSchema>;
@@ -13,4 +14,6 @@ export type NewUser = {
 }
 
 export type SignedInUser = Omit<NewUser, "createdAt">;
+export type AuthUser = Omit<User, "password">;
+
 
