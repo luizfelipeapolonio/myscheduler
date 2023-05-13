@@ -16,6 +16,7 @@ model User {
   name String @db.VarChar(20)
   password String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   appointments Appointment[]
 
   @@map("user")
@@ -32,7 +33,7 @@ model Appointment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId String
-  fk_userId User @relation(fields: [userId], references: [id])
+  fk_userId User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("appointment")
 }
