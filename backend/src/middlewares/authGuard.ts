@@ -43,7 +43,8 @@ export class authGuard {
                     id: true,
                     name: true,
                     email: true,
-                    createdAt: true
+                    createdAt: true,
+                    updatedAt: true
                 }
             });
 

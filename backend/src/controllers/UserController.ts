@@ -3,9 +3,16 @@ import bcrypt from "bcryptjs";
 
 // Types
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
-import { userCreateBody, userSignInBody, NewUser, SignedInUser, AuthUser } from "../types/user.types";
+import { 
+    userCreateBody, 
+    userSignInBody,
+    userUpdateBody, 
+    NewUser, 
+    SignedInUser, 
+    AuthUser,
+} from "../types/user.types";
 import { User } from "@prisma/client";
-import { Request } from "express";
+import { Request, Response } from "express";
 
 import Logger from "../config/logger";
 
@@ -156,5 +163,82 @@ export class UserController {
             message: "Usuário logado",
             payload: authUser
         });
+    }
+
+    async userUpdate(req: ITypedRequestBody<userUpdateBody>, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
+        const { name, password } = req.body;
+        const authUser: AuthUser = res.locals.authUser;
+        const utils = new userUtils();
+
+        try {
+            if(name) {
+                await prisma.user.update({
+                    where: {
+                        id: authUser.id
+                    },
+                    data: {
+                        name
+                    }
+                });
+            }
+
+            if(password) {
+                const newPassword: string | null = await utils.generatePasswordHash(password);
+
+                // Check if new password was hashed successfully
+                if(!newPassword) {
+                    return res.status(500).json({
+                        status: "error",
+                        message: "Ocorreu um erro! Por favor, tente mais tarde",
+                        payload: null
+                    });
+                }
+
+                await prisma.user.update({
+                    where: {
+                        id: authUser.id
+                    },
+                    data: {
+                        password: newPassword
+                    }
+                });
+            }
+
+            const updatedUser: AuthUser | null = await prisma.user.findFirst({
+                where: { 
+                    id: authUser.id 
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            });
+
+            // Check if user was found
+            if(!updatedUser) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Usuário não encontrado",
+                    payload: null
+                });
+            }
+
+            return res.status(200).json({
+                status: "success",
+                message: "Usuário atualizado com sucesso!",
+                payload: updatedUser
+            })
+
+        } catch(error) {
+            Logger.error("Erro ao atualizar usuário --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
     }
 }

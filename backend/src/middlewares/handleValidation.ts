@@ -2,7 +2,7 @@
 import { Request, NextFunction } from "express";
 import { IJSONResponse, ITypedResponse } from "../types/shared.types";
 
-import { userCreateSchema, userSignInSchema } from "../validation/userSchemas";
+import { userCreateSchema, userSignInSchema, userUpdateSchema } from "../validation/userSchemas";
 
 import Logger from "../config/logger";
 
@@ -23,7 +23,9 @@ export class handleValidation {
                 return { path: errorObject.path[0], message: errorObject.message };
             });
 
-            Logger.error("Erro na validação de criação de usuário --> " + `Erro: ${JSON.stringify(validation.error.issues)}`);
+            Logger.error(
+                "Erro na validação de criação de usuário --> " + `Erro: ${JSON.stringify(validation.error.issues)}`
+            );
 
             return res.status(422).json({
                 status: "error",
@@ -44,11 +46,37 @@ export class handleValidation {
                 return { path: errorObject.path[0], message: errorObject.message };
             });
 
-            Logger.error("Erro na validação de login --> " + `Erro: ${JSON.stringify(validation.error.issues)}`);
+            Logger.error(
+                "Erro na validação de login --> " + `Erro: ${JSON.stringify(validation.error.issues)}`
+            );
 
             return res.status(422).json({
                 status: "error",
                 message: "Erro na validação de login de usuário",
+                payload: errors
+            });
+        }
+    }
+
+    async userUpdateValidation(req: Request, res: ITypedResponse<IJSONResponse<validationErrors[]>>, next: NextFunction) {
+        const validation = await userUpdateSchema.safeParseAsync(req.body);
+
+        if(validation.success) {
+            Logger.info("Usuário validado com sucesso!");
+            return next();
+        } else {
+            const errors: validationErrors[] = validation.error.issues.map((errorObject) => {
+                return { path: errorObject.path[0], message: errorObject.message };
+            });
+
+            Logger.error(
+                "Erro na validação de atualização de usuário --> " + 
+                `Erro: ${JSON.stringify(validation.error.issues)}`
+            );
+
+            return res.status(422).json({
+                status: "error",
+                message: "Erro na validação de atualização de usuário",
                 payload: errors
             });
         }
