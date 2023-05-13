@@ -165,7 +165,7 @@ export class UserController {
         });
     }
 
-    async userUpdate(req: ITypedRequestBody<userUpdateBody>, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
+    async update(req: ITypedRequestBody<userUpdateBody>, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
         const { name, password } = req.body;
         const authUser: AuthUser = res.locals.authUser;
         const utils = new userUtils();
@@ -237,6 +237,37 @@ export class UserController {
             return res.status(500).json({
                 status: "error",
                 message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
+    }
+
+    async delete(req: Request, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
+        const authUser: AuthUser = res.locals.authUser;
+
+        try {
+            const deletedUser: AuthUser = await prisma.user.delete({
+                where: { id: authUser.id },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            });
+
+            return res.status(200).json({
+                status: "success",
+                message: "Usuário excluído com sucesso!",
+                payload: deletedUser
+            });
+
+        } catch(error) {
+            Logger.error("Erro ao excluir usuário --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Erro ao excluir usuário! Por favor, tente mais tarde",
                 payload: null
             });
         }

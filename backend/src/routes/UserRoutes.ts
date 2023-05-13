@@ -22,7 +22,8 @@ export class UserRoutes {
         this.router.post("/register", validation.userCreateValidation, user.createAndSignInUser);
         this.router.post("/login", validation.userSignInValidation, user.signIn);
         this.router.get("/user", auth.execute, user.getCurrentUser);
-        this.router.patch("/user", auth.execute, validation.userUpdateValidation, user.userUpdate);
+        this.router.patch("/user", auth.execute, validation.userUpdateValidation, user.update);
+        this.router.delete("/user", auth.execute, user.delete);
 
         return this.router;
     }
