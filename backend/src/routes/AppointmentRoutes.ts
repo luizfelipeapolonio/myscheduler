@@ -19,6 +19,7 @@ export class AppointmentRoutes {
             return res.send("Rotas de compromissos funcionando!");
         });
 
+        this.router.get("/", auth.execute, appointment.getAllUserAppointments);
         this.router.post("/appointment", auth.execute, validation.appointmentCreateValidation, appointment.create);
 
         return this.router;

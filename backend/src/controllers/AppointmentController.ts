@@ -14,8 +14,8 @@ export class AppointmentController {
         const { title, type, priority, date, description, time } = req.body;
         const authUser: AuthUser = res.locals.authUser;
 
-        const formatedDate = new Date(`${date.year}-${date.month}-${date.day}`);
-        const formatedTime = time ? `${time.hour}:${time.minute}` : undefined;
+        const formatedDate: Date = new Date(`${date.year}-${date.month}-${date.day}`);
+        const formatedTime: string | undefined = time ? `${time.hour}:${time.minute}` : undefined;
 
         try {
             const appointment = await prisma.appointment.create({
@@ -38,6 +38,34 @@ export class AppointmentController {
 
         } catch(error) {
             Logger.error("Erro ao criar compromisso --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
+    }
+
+    async getAllUserAppointments(req: Request, res: ITypedResponse<IJSONResponse<Appointment[] | null>>) {
+        const authUser: AuthUser = res.locals.authUser;
+
+        try {
+            const appointments: Appointment[] = await prisma.appointment.findMany({
+                where: { userId: authUser.id },
+                orderBy: { date: "asc" }
+            });
+
+            return res.status(200).json({
+                status: "success",
+                message: "Todos os compromissos do usuário",
+                payload: appointments
+            });
+
+        } catch(error) {
+            Logger.error(
+                "Erro ao buscar todos os compromissos do usuário --> " + 
+                `Erro: ${error}`
+            );
             return res.status(500).json({
                 status: "error",
                 message: "Ocorreu um erro! Por favor, tente mais tarde",
