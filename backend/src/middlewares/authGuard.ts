@@ -8,7 +8,7 @@ import { AuthUser } from "../types/user.types";
 
 import Logger from "../config/logger";
 
-export class authGuard {
+export class AuthGuard {
     async execute(req: Request, res: ITypedResponse<IJSONResponse<null>>, next: NextFunction) {
         const authHeader: string | undefined = req.headers.authorization;
         const token: string | undefined = authHeader ? authHeader.split(" ")[1] : undefined;
