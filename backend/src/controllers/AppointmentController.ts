@@ -73,4 +73,40 @@ export class AppointmentController {
             });
         }
     }
+
+    async getAppointmentById(req: Request<{ id: string }>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+        const { id } = req.params;
+        const authUser: AuthUser = res.locals.authUser;
+
+        try {
+            const appointment: Appointment | null = await prisma.appointment.findFirst({
+                where: {
+                    userId: authUser.id,
+                    id
+                }
+            });
+
+            if(!appointment) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Compromisso não encontrado",
+                    payload: null
+                });
+            }
+
+            return res.status(200).json({
+                status: "success",
+                message: "Compromisso encontrado",
+                payload: appointment
+            });
+                
+        } catch(error) {
+            Logger.error("Erro ao buscar compromisso pelo id --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
+    }
 }

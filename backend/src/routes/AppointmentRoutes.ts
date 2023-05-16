@@ -21,7 +21,7 @@ export class AppointmentRoutes {
 
         this.router.get("/", auth.execute, appointment.getAllUserAppointments);
         this.router.post("/appointment", auth.execute, validation.appointmentCreateValidation, appointment.create);
-
+        this.router.get("/:id", auth.execute, appointment.getAppointmentById);
         return this.router;
     }
 }
