@@ -12,7 +12,7 @@ import {
     AuthUser,
 } from "../types/user.types";
 import { User } from "@prisma/client";
-import { Request, Response } from "express";
+import { Request } from "express";
 
 import Logger from "../config/logger";
 
