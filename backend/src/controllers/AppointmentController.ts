@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { Appointment } from "@prisma/client";
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
 import { AuthUser } from "../types/user.types";
-import { appointmentCreateBody } from "../types/appointment.types";
+import { appointmentCreateBody, appointmentEditBody } from "../types/appointment.types";
 
 import Logger from "../config/logger";
 
@@ -104,6 +104,72 @@ export class AppointmentController {
             Logger.error("Erro ao buscar compromisso pelo id --> " + `Erro: ${error}`);
             return res.status(500).json({
                 status: "error",
+                message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
+    }
+
+    async edit(req: Request<{ id: string }, {}, appointmentEditBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+        const { id } = req.params;
+        const { title, type, description, priority, date, time } = req.body;
+        const authUser: AuthUser = res.locals.authUser;
+
+        let formatedDate: Date | undefined = undefined;
+        let formatedTime: string | null = null;
+
+        try {
+            const appointment: Appointment | null = await prisma.appointment.findFirst({
+                where: { id }
+            });
+
+            if(!appointment) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Compromisso não encontrado",
+                    payload: null
+                });
+            }
+
+            // Check if appointment belongs to authenticated user
+            if(appointment.userId !== authUser.id) {
+                return res.status(401).json({
+                    status: "error",
+                    message: "Ocorreu um erro! Por favor, tente mais tarde",
+                    payload: null
+                });
+            }
+
+            if(date) {
+                formatedDate = new Date(`${date.year}-${date.month}-${date.day}`);
+            }
+
+            if(time) {
+                formatedTime = `${time.hour}:${time.minute}`;
+            }
+
+            const editedAppointment: Appointment = await prisma.appointment.update({
+                where: { id: appointment.id },
+                data: {
+                    title,
+                    type,
+                    priority,
+                    description,
+                    date: formatedDate,
+                    time: formatedTime
+                }
+            });
+
+            return res.status(200).json({
+                status: "success",
+                message: "Compromisso editado com sucesso!",
+                payload: editedAppointment
+            });
+
+        } catch(error) {
+            Logger.error("Erro na edição de compromisso --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error", 
                 message: "Ocorreu um erro! Por favor, tente mais tarde",
                 payload: null
             });
