@@ -1,7 +1,7 @@
 import { prisma } from "../config/PrismaClient";
 
 // Types
-import { Request, Response } from "express";
+import { Request } from "express";
 import { Appointment } from "@prisma/client";
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
 import { AuthUser } from "../types/user.types";
@@ -171,6 +171,52 @@ export class AppointmentController {
             return res.status(500).json({
                 status: "error", 
                 message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
+    }
+
+    async delete(req: Request<{ id: string }>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+        const { id } = req.params;
+        const authUser: AuthUser = res.locals.authUser;
+
+        try {
+            const appointment: Appointment | null = await prisma.appointment.findFirst({
+                where: { id }
+            });
+
+            if(!appointment) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Compromisso não encontrado",
+                    payload: null
+                });
+            }
+
+            // Check if appointment belongs to authenticated user
+            if(appointment.userId !== authUser.id) {
+                return res.status(401).json({
+                    status: "error",
+                    message: "Ocorreu um erro! Por favor, tente mais tarde",
+                    payload: null
+                });
+            }
+
+            const deletedAppointment: Appointment = await prisma.appointment.delete({
+                where: { id: appointment.id }
+            });
+
+            return res.status(200).json({
+                status: "success",
+                message: "Compromisso excluído com sucesso!",
+                payload: deletedAppointment
+            });
+
+        } catch(error) {
+            Logger.error("Erro ao excluir compromisso --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Erro ao excluir compromisso! Por favor, tente mais tarde",
                 payload: null
             });
         }
