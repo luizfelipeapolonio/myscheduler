@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { User } from "@prisma/client";
-import { userCreateSchema, userSignInSchema, userUpdateSchema } from "../validation/userSchemas";
+import { createUserSchema, signInUserSchema, updateUserSchema } from "../validation/userSchemas";
 
-export type userCreateBody = z.infer<typeof userCreateSchema>;
-export type userSignInBody = z.infer<typeof userSignInSchema>;
-export type userUpdateBody = z.infer<typeof userUpdateSchema>;
+export type CreateUserBody = z.infer<typeof createUserSchema>;
+export type SignInUserBody = z.infer<typeof signInUserSchema>;
+export type UpdateUserBody = z.infer<typeof updateUserSchema>;
 
 export type NewUser = {
     token: string;

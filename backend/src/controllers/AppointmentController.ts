@@ -5,12 +5,12 @@ import { Request } from "express";
 import { Appointment } from "@prisma/client";
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
 import { AuthUser } from "../types/user.types";
-import { appointmentCreateBody, appointmentEditBody } from "../types/appointment.types";
+import { CreateAppointmentBody, EditAppointmentBody } from "../types/appointment.types";
 
 import Logger from "../config/logger";
 
 export class AppointmentController {
-    async create(req: ITypedRequestBody<appointmentCreateBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+    async create(req: ITypedRequestBody<CreateAppointmentBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
         const { title, type, priority, date, description, time } = req.body;
         const authUser: AuthUser = res.locals.authUser;
 
@@ -110,7 +110,7 @@ export class AppointmentController {
         }
     }
 
-    async edit(req: Request<{ id: string }, {}, appointmentEditBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+    async edit(req: Request<{ id: string }, {}, EditAppointmentBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
         const { id } = req.params;
         const { title, type, description, priority, date, time } = req.body;
         const authUser: AuthUser = res.locals.authUser;

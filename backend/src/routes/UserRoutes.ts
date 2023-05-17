@@ -19,10 +19,10 @@ export class UserRoutes {
             return res.send("Rotas de usuário funcionando!");
         });
 
-        this.router.post("/register", validation.userCreateValidation, user.createAndSignInUser);
-        this.router.post("/login", validation.userSignInValidation, user.signIn);
+        this.router.post("/register", validation.createUser, user.createAndSignInUser);
+        this.router.post("/login", validation.signInUser, user.signIn);
         this.router.get("/user", auth.execute, user.getCurrentUser);
-        this.router.patch("/user", auth.execute, validation.userUpdateValidation, user.update);
+        this.router.patch("/user", auth.execute, validation.updateUser, user.update);
         this.router.delete("/user", auth.execute, user.delete);
 
         return this.router;

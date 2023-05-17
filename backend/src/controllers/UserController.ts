@@ -4,9 +4,9 @@ import bcrypt from "bcryptjs";
 // Types
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
 import { 
-    userCreateBody, 
-    userSignInBody,
-    userUpdateBody, 
+    CreateUserBody, 
+    SignInUserBody,
+    UpdateUserBody, 
     NewUser, 
     SignedInUser, 
     AuthUser,
@@ -19,7 +19,7 @@ import Logger from "../config/logger";
 import { userUtils } from "../utils/userUtils";
 
 export class UserController {
-    async createAndSignInUser(req: ITypedRequestBody<userCreateBody>, res: ITypedResponse<IJSONResponse<NewUser | null>>) {
+    async createAndSignInUser(req: ITypedRequestBody<CreateUserBody>, res: ITypedResponse<IJSONResponse<NewUser | null>>) {
         const { email, name, password } = req.body;
 
         const utils = new userUtils();
@@ -93,7 +93,7 @@ export class UserController {
         }
     }
 
-    async signIn(req: ITypedRequestBody<userSignInBody>, res: ITypedResponse<IJSONResponse<SignedInUser | null>>) {
+    async signIn(req: ITypedRequestBody<SignInUserBody>, res: ITypedResponse<IJSONResponse<SignedInUser | null>>) {
         const { email, password } = req.body;
 
         const utils = new userUtils();
@@ -165,7 +165,7 @@ export class UserController {
         });
     }
 
-    async update(req: ITypedRequestBody<userUpdateBody>, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
+    async update(req: ITypedRequestBody<UpdateUserBody>, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
         const { name, password } = req.body;
         const authUser: AuthUser = res.locals.authUser;
         const utils = new userUtils();

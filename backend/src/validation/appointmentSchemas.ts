@@ -51,7 +51,7 @@ const AppointmentTime = z.object({
 }).optional();
 
 // Schemas
-export const appointmentCreateSchema = z.object({
+export const createAppointmentSchema = z.object({
     type: AppointmentType,
     title: z.string({ required_error: "O título é obrigatório" })
            .min(1, { message: "O título não pode estar vazio" }),
@@ -61,7 +61,7 @@ export const appointmentCreateSchema = z.object({
     time: AppointmentTime
 });
 
-export const appointmentEditSchema = z.object({
+export const editAppointmentSchema = z.object({
     type: AppointmentType.optional(),
     title: z.string().min(1, { message: "O título deve ter no mínimo 1 caractere" }).optional(),
     description: z.string().optional(),

@@ -2,8 +2,8 @@
 import { Request, NextFunction } from "express";
 import { IJSONResponse, ITypedResponse } from "../types/shared.types";
 
-import { userCreateSchema, userSignInSchema, userUpdateSchema } from "../validation/userSchemas";
-import { appointmentCreateSchema, appointmentEditSchema } from "../validation/appointmentSchemas";
+import { createUserSchema, signInUserSchema, updateUserSchema } from "../validation/userSchemas";
+import { createAppointmentSchema, editAppointmentSchema } from "../validation/appointmentSchemas";
 
 import Logger from "../config/logger";
 
@@ -13,12 +13,12 @@ interface validationErrors {
 }
 
 export class HandleValidation {
-    async userCreateValidation(
+    async createUser(
         req: Request, 
         res: ITypedResponse<IJSONResponse<validationErrors[]>>, 
         next: NextFunction
     ) {
-        const validation = await userCreateSchema.safeParseAsync(req.body);
+        const validation = await createUserSchema.safeParseAsync(req.body);
 
         if(validation.success) {
             Logger.info("Criação de usuário validada com sucesso!");
@@ -40,12 +40,12 @@ export class HandleValidation {
         }
     }
 
-    async userSignInValidation(
+    async signInUser(
         req: Request, 
         res: ITypedResponse<IJSONResponse<validationErrors[]>>,
         next: NextFunction
     ) {
-        const validation = await userSignInSchema.safeParseAsync(req.body);
+        const validation = await signInUserSchema.safeParseAsync(req.body);
 
         if(validation.success) {
             Logger.info("Login de usuário validado com sucesso!");
@@ -67,12 +67,12 @@ export class HandleValidation {
         }
     }
 
-    async userUpdateValidation(
+    async updateUser(
         req: Request, 
         res: ITypedResponse<IJSONResponse<validationErrors[]>>, 
         next: NextFunction
     ) {
-        const validation = await userUpdateSchema.safeParseAsync(req.body);
+        const validation = await updateUserSchema.safeParseAsync(req.body);
 
         if(validation.success) {
             Logger.info("Atualização de usuário validado com sucesso!");
@@ -95,12 +95,12 @@ export class HandleValidation {
         }
     }
 
-    async appointmentCreateValidation(
+    async createAppointment(
         req: Request, 
         res: ITypedResponse<IJSONResponse<validationErrors[]>>, 
         next: NextFunction
     ) {
-        const validation = await appointmentCreateSchema.safeParseAsync(req.body);
+        const validation = await createAppointmentSchema.safeParseAsync(req.body);
 
         if(validation.success) {
             Logger.info("Criação de compromisso validado com sucesso");
@@ -128,12 +128,12 @@ export class HandleValidation {
         }
     }
 
-    async appointmentEditValidation(
+    async editAppointment(
         req: Request,
         res: ITypedResponse<IJSONResponse<validationErrors[]>>,
         next: NextFunction
     ) {
-        const validation = await appointmentEditSchema.safeParseAsync(req.body);
+        const validation = await editAppointmentSchema.safeParseAsync(req.body);
 
         if(validation.success) {
             Logger.info("Edição de compromisso validada com sucesso!")

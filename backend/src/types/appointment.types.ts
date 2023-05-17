@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { appointmentCreateSchema, appointmentEditSchema } from "../validation/appointmentSchemas";
+import { createAppointmentSchema, editAppointmentSchema } from "../validation/appointmentSchemas";
 
-export type appointmentCreateBody = z.infer<typeof appointmentCreateSchema>;
-export type appointmentEditBody = z.infer<typeof appointmentEditSchema>;
+export type CreateAppointmentBody = z.infer<typeof createAppointmentSchema>;
+export type EditAppointmentBody = z.infer<typeof editAppointmentSchema>;
