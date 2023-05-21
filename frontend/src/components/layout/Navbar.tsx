@@ -1,11 +1,17 @@
 // CSS
 import styles from "./Navbar.module.css";
 
+// Icons
 import { BsFillCalendarWeekFill, BsFillPersonFill, BsBoxArrowInRight, BsPersonAdd } from "react-icons/bs";
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const toggleDropdownMenu = (): void => setIsOpen((isOpen) => !isOpen);
+
     return (
         <nav className={styles.navbar}>
             <div className={styles.logo}>
@@ -13,12 +19,12 @@ const Navbar = () => {
                 <h1>myScheduler</h1>
             </div>
             <div className={styles.dropdown}>
-                <div className={styles.user_container}>
-                    <div className={styles.user}>
+                <div className={`${styles.user_container} ${isOpen ? styles.active_menu : ""}`}>
+                    <div className={styles.user} onClick={toggleDropdownMenu}>
                         <BsFillPersonFill />
                     </div>
                 </div>
-                <div className={styles.dropdown_menu}>
+                <div className={`${styles.dropdown_menu} ${isOpen ? styles.open : ""}`}>
                     <Link to="/login">
                         <BsBoxArrowInRight />
                         <span>Entrar</span>
