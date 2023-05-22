@@ -3,6 +3,7 @@ import styles from "./App.module.css";
 // Pages
 import Calendar from "./pages/Calendar";
 import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
 // Components
 import Root from "./components/layout/Root";
@@ -20,6 +21,7 @@ function App() {
       <Route path="/" element={<Root />}>
         <Route index path="/" element={<Calendar />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
     )
   );
