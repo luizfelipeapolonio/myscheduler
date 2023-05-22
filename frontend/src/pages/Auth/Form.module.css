@@ -1,0 +1,129 @@
+.form_container {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 40%;
+    margin: 4rem auto;
+    background-color: #08080a;
+    padding: 3rem 2.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.form_container h1 {
+    margin-bottom: 1.8rem;
+}
+
+.form_container p:nth-child(2) {
+    font-style: italic;
+    color: #b7b7ba;
+    margin-bottom: 2.5rem;
+}
+
+.form_container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form_container form input {
+    background-color: #1d1d22;
+    color: #e1e1e6;
+    outline: none;
+    width: 100%;
+    font-size: 1.5rem;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+}
+
+.form_container form input::placeholder {
+    color: #a0a0a1;
+}
+
+.form_container form input:focus,
+.form_container .password:focus-within input {
+    border: 2px solid #954dff;
+    transition: 0.3s ease 0.1s;
+}
+
+.form_container form input[type="submit"] {
+    background-color: #6700ff;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+    border: none;
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.form_container form input[type="submit"]:disabled {
+    background-color: #954dff;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.form_container .email,
+.form_container .name,
+.form_container .password {
+    position: relative;
+}
+
+.form_container .email svg,
+.form_container .name svg,
+.form_container .password > svg {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    transform: translateY(-90%);
+    font-size: 1.8rem;
+    color: #58585b;
+}
+
+.form_container .name svg {
+    font-size: 2.3rem;
+}
+
+.form_container .email input,
+.form_container .name input {
+    padding: 1rem 1rem 1rem 3.3rem;
+}
+
+.form_container .password input {
+    padding: 1rem 3.3rem;
+}
+
+.form_container .password button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 0.8rem;
+    transform: translateY(-90%);
+    border: none;
+    background: transparent;
+}
+
+.form_container .password button svg {
+    color: #58585b;
+    font-size: 2rem;
+}
+
+.form_container .email:focus-within svg,
+.form_container .name:focus-within svg,
+.form_container .password:focus-within svg {
+    color: #954dff;
+    transition: 0.3s ease 0.1s;
+}
+
+.form_container .redirect {
+    font-size: 1.5rem;
+}
+
+.form_container .redirect a {
+    font-weight: 600;
+    color: #9b58ff;
+    margin-left: 0.5rem;
+}
