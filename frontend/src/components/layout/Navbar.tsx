@@ -11,6 +11,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const toggleDropdownMenu = (): void => setIsOpen((isOpen) => !isOpen);
+    const closeDropdownMenu = (): void => setIsOpen(false);
 
     return (
         <nav className={styles.navbar}>
@@ -25,11 +26,11 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className={`${styles.dropdown_menu} ${isOpen ? styles.open : ""}`}>
-                    <Link to="/login">
+                    <Link to="/login" onClick={closeDropdownMenu}>
                         <BsBoxArrowInRight />
                         <span>Entrar</span>
                     </Link>
-                    <Link to="#">
+                    <Link to="/register" onClick={closeDropdownMenu}>
                         <BsPersonAdd />
                         <span>Cadastrar</span>
                     </Link>
