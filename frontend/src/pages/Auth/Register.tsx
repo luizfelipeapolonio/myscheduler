@@ -8,6 +8,8 @@ import { FaLock } from "react-icons/fa";
 import { useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
 
+import { useHandleUser } from "../../hooks/useHandleUser";
+
 const Register = () => {
     const [email, setEmail] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -20,18 +22,24 @@ const Register = () => {
     const togglePassword = (): void => setIsPasswordVisible((isPasswordVisible) => !isPasswordVisible);
     const toggleConfirmPass = (): void => setIsConfirmPassVisible((isConfirmPassVisible) => !isConfirmPassVisible);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    const { createAndSignInUser, data, error, loading } = useHandleUser();
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
-        const register = {
+        const registerBody = {
             email,
             name,
             password,
             confirmPassword
         }
 
-        console.log(register);
+        await createAndSignInUser(registerBody);
+
     }
+    console.log("REGISTER COMPONENT --> ", data);
+    console.log("REGISTER ERROR --> ", error);
+    console.log("REGISTER LOADING --> ", loading);
 
     return (
         <div className={styles.form_container}>
