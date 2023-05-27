@@ -62,8 +62,6 @@ const Register = () => {
         reset();
     }, [data, error]);
 
-    console.log("REGISTER ERROR --> ", error);
-
     useEffect(() => {
         if(message) {
             const timer: number = setTimeout(() => {
