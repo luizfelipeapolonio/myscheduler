@@ -1,6 +1,6 @@
 // Types
 import { IApiResponse } from "../types/shared.types";
-import { ICreateUserBody, ICreateUserResponse } from "../types/user.types";
+import { ICreateUserBody, ICreateUserResponse, ISignedUser } from "../types/user.types";
 
 import { useState } from "react";
 
@@ -31,7 +31,20 @@ export function useHandleUser(): IHandleUser {
 
             if(registerResponse === null) setError(true);
             if(registerResponse && registerResponse.status === "error") setError(true);
-            if(registerResponse && registerResponse.status === "success") setSuccess(true);
+
+            if(registerResponse && registerResponse.status === "success") {
+                if(registerResponse.payload !== null) {
+                    const signedUser: ISignedUser = {
+                        token: registerResponse.payload.token,
+                        name: registerResponse.payload.name,
+                        email: registerResponse.payload.email
+                    }
+                    
+                    localStorage.setItem("user", JSON.stringify(signedUser));
+                }
+                
+                setSuccess(true);
+            };
 
             setData(registerResponse);
 
@@ -45,7 +58,6 @@ export function useHandleUser(): IHandleUser {
 
     const reset = (): void => {
         setData(null);
-        setLoading(false);
         setError(false);
         setSuccess(false);
     }

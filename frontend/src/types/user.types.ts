@@ -12,3 +12,9 @@ export interface ICreateUserResponse {
     email: string;
     createdAt: Date;
 }
+
+export interface ISignedUser {
+    token: string;
+    name: string;
+    email: string;
+}
