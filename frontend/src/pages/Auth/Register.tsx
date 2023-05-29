@@ -32,6 +32,8 @@ const Register = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
+        reset();
+        
         const registerBody = {
             email,
             name,
@@ -55,13 +57,13 @@ const Register = () => {
             }
         }
 
-        if(error) {
+        if(!data && error) {
             setMessage("Ocorreu um erro! Por favor, tente mais tarde");
         }
 
-        reset();
     }, [data, error]);
 
+    // Clean up form message
     useEffect(() => {
         if(message) {
             const timer: number = setTimeout(() => {
@@ -72,6 +74,12 @@ const Register = () => {
         }
     }, [message]);
 
+    // Reset user request states and message when component mounts
+    useEffect(() => { 
+        reset();
+        setMessage("");
+    }, []);
+    
     return (
         <div className={styles.form_container}>
             <h1>Criar conta</h1>
