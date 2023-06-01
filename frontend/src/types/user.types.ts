@@ -5,6 +5,11 @@ export interface ICreateUserBody {
     confirmPassword: string;
 }
 
+export interface ILoginBody {
+    email: string;
+    password: string;
+}
+
 export interface ICreateUserResponse {
     token: string;
     id: string;
@@ -12,6 +17,8 @@ export interface ICreateUserResponse {
     email: string;
     createdAt: Date;
 }
+
+export type ILoginResponse = Omit<ICreateUserResponse, "createdAt">;
 
 export interface ISignedUser {
     token: string;
