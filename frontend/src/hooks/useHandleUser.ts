@@ -2,7 +2,8 @@
 import { IApiResponse } from "../types/shared.types";
 import { ICreateUserBody, ICreateUserResponse, ISignedUser } from "../types/user.types";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuthContext } from "../context/Auth/AuthContext";
 
 // Services
 import { register } from "../services/userService";
@@ -21,6 +22,16 @@ export function useHandleUser(): IHandleUser {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
+
+    const { setChanged } = useAuthContext();
+
+    useEffect(() => {
+        if(data) {
+            setChanged(true);
+        } else {
+            setChanged(false);
+        }
+    }, [data]);
 
     const createAndSignInUser = async (body: ICreateUserBody): Promise<void> => {
         
