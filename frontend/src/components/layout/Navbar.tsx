@@ -1,6 +1,9 @@
 // CSS
 import styles from "./Navbar.module.css";
 
+// Components
+import AuthUser from "./AuthUser";
+
 // Icons
 import { 
     BsFillCalendarWeekFill, 
@@ -42,9 +45,11 @@ const Navbar = () => {
                             <BsFillPersonFill />
                         </div>
                     ) : (
-                        <div className={`${styles.user} ${styles.signed_user}`} onClick={toggleDropdownMenu}>
-                            {authUser.name.split("")[0].toUpperCase()}
-                        </div>
+                        <AuthUser 
+                            authUser={authUser}
+                            type="default"
+                            toggleDropdownMenu={toggleDropdownMenu} 
+                        />
                     )}
                 </div>
                 <div className={`${styles.dropdown_menu} ${isOpen ? styles.open : ""}`}>
@@ -60,10 +65,13 @@ const Navbar = () => {
                         </Link>
                     </>
                 ) : (
-                    <button onClick={logout}>
-                        <BsBoxArrowLeft />
-                        <span>Sair</span>
-                    </button>
+                    <>
+                        <AuthUser authUser={authUser} type="full" align="center" />
+                        <button onClick={logout}>
+                            <BsBoxArrowLeft />
+                            <span>Sair</span>
+                        </button>
+                    </>
                 )}
                 </div>
             </div>
