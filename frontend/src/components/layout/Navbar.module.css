@@ -47,6 +47,10 @@
     font-size: 2.4rem;
 }
 
+.dropdown .user_container .user.signed_user {
+    background-color: #3e0099;
+}
+
 .dropdown .dropdown_menu {
     position: absolute;
     top: 6.1rem;
@@ -71,15 +75,32 @@
     transition: 0.2s;
 }
 
-.dropdown .dropdown_menu a:hover {
+.dropdown .dropdown_menu button {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 0.3rem;
+    gap: 0.8rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    transition: 0.2s;
+    color: inherit;
+}
+
+.dropdown .dropdown_menu a:hover,
+.dropdown .dropdown_menu button:hover {
     background-color:rgba(255, 255, 255, 0.1);
 }
 
-.dropdown .dropdown_menu a:hover svg {
+.dropdown .dropdown_menu a:hover svg,
+.dropdown .dropdown_menu button:hover svg {
     color: #954dff;
 }
 
-.dropdown .dropdown_menu a svg {
+.dropdown .dropdown_menu a svg,
+.dropdown .dropdown_menu button svg {
     font-size: 2.2rem;
 }
 
