@@ -2,8 +2,10 @@
 import { ISignedUser } from "../types/user.types";
 
 import { useState, useEffect } from "react";
-
 import { useAuthContext } from "../context/Auth/AuthContext";
+
+// Utils
+import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
 
 export interface IUseAuth {
     authUser: ISignedUser | null;
@@ -17,14 +19,9 @@ export function useAuth(): IUseAuth {
     const context = useAuthContext();
 
     useEffect(() => {
-        const getUserFromLocalStorage = (): void => {
-            const getUser: string | null = localStorage.getItem("user");
-            const signedUser: ISignedUser | null = getUser ? JSON.parse(getUser) : null;
+        const signedUser: ISignedUser | null = getUserFromLocalStorage();
+        setAuthUser(signedUser);
         
-            setAuthUser(signedUser);
-        }
-       
-        getUserFromLocalStorage(); 
         setLoading(false);
     }, [context]);
 
