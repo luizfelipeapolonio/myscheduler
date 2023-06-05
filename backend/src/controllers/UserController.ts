@@ -155,14 +155,45 @@ export class UserController {
         }
     }
 
-    getCurrentUser(req: Request, res: ITypedResponse<IJSONResponse<AuthUser>>) {
+    async getCurrentUser(req: Request, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
         const authUser: AuthUser = res.locals.authUser;
 
-        return res.status(200).json({
-            status: "success",
-            message: "Usuário logado",
-            payload: authUser
-        });
+        try {
+            const currentUser: AuthUser | null = await prisma.user.findFirst({
+                where: {
+                    id: authUser.id
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            });
+    
+            if(!currentUser) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Usuário não encontrado",
+                    payload: null
+                });
+            }
+    
+            return res.status(200).json({
+                status: "success",
+                message: "Usuário logado",
+                payload: currentUser
+            });
+
+        } catch(error) {
+            Logger.error("Erro ao buscar o usuário logado --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
     }
 
     async update(req: ITypedRequestBody<UpdateUserBody>, res: ITypedResponse<IJSONResponse<AuthUser | null>>) {
