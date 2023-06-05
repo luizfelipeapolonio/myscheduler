@@ -1,19 +1,30 @@
 // Types
 import { IApiResponse } from "../types/shared.types";
-import { ICreateUserBody, ICreateUserResponse, ILoginBody, ILoginResponse, ISignedUser } from "../types/user.types";
+import { 
+    ICreateUserBody, 
+    ICreateUserResponse, 
+    ILoginBody, 
+    LoginResponse, 
+    CurrentUserResponse,
+    ISignedUser
+} from "../types/user.types";
 
 import { useState, useEffect } from "react";
 import { useAuthContext } from "../context/Auth/AuthContext";
 
 // Services
-import { register, login } from "../services/userService";
+import { register, login, currentUser } from "../services/userService";
 
-type UserResponse = ICreateUserResponse | ILoginResponse;
+// Utils
+import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
+
+type UserResponse = ICreateUserResponse | LoginResponse | CurrentUserResponse;
 
 interface IHandleUser {
     createAndSignInUser: (body: ICreateUserBody) => Promise<void>;
     signIn: (body: ILoginBody) => Promise<void>;
     signOut: () => void;
+    getCurrentUser: () => Promise<void>;
     reset: () => void;
     data: IApiResponse<UserResponse | null> | null;
     loading: boolean;
@@ -105,6 +116,33 @@ export function useHandleUser(): IHandleUser {
         }
     }
 
+    const getCurrentUser = async (): Promise<void> => {
+        const localStorageUser: ISignedUser | null = getUserFromLocalStorage();
+
+        if(localStorageUser === null) {
+            setError(true);
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const user = await currentUser(localStorageUser.token);
+
+            if(user === null) setError(true);
+            if(user && user.status === "error") setError(true);
+            if(user && user.status === "success") setSuccess(true);
+
+            setData(user);
+
+        } catch(error) {
+            console.log("Erro ao buscar usuário logado --> ", error);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const signOut = (): void => {
         localStorage.removeItem("user");
         setChanged(true);
@@ -116,5 +154,15 @@ export function useHandleUser(): IHandleUser {
         setSuccess(false);
     }
 
-    return { createAndSignInUser, signIn, signOut, reset, data, loading, error, success };
+    return { 
+        createAndSignInUser, 
+        signIn, 
+        signOut, 
+        getCurrentUser, 
+        reset, 
+        data, 
+        loading, 
+        error, 
+        success 
+    };
 }

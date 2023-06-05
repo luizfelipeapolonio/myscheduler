@@ -1,3 +1,5 @@
+import { IUser } from "./shared.types";
+
 export interface ICreateUserBody {
     name: string;
     email: string;
@@ -18,7 +20,8 @@ export interface ICreateUserResponse {
     createdAt: Date;
 }
 
-export type ILoginResponse = Omit<ICreateUserResponse, "createdAt">;
+export type LoginResponse = Omit<ICreateUserResponse, "createdAt">;
+export type CurrentUserResponse = Omit<IUser, "password">;
 
 export interface ISignedUser {
     token: string;

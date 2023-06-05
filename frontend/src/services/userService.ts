@@ -1,6 +1,12 @@
 // Types
 import { IApiResponse } from "../types/shared.types";
-import { ICreateUserBody, ILoginBody, ICreateUserResponse, ILoginResponse } from "../types/user.types";
+import { 
+    ICreateUserBody, 
+    ILoginBody, 
+    ICreateUserResponse, 
+    LoginResponse, 
+    CurrentUserResponse 
+} from "../types/user.types";
 
 const api: string = "http://localhost:5000/api";
 
@@ -24,7 +30,7 @@ export const register = async (body: ICreateUserBody): Promise<IApiResponse<ICre
     }
 }
 
-export const login = async (body: ILoginBody): Promise<IApiResponse<ILoginResponse | null> | null> => {
+export const login = async (body: ILoginBody): Promise<IApiResponse<LoginResponse | null> | null> => {
     try {
         const response = await fetch(api + "/users/login", {
             method: "POST",
@@ -34,12 +40,32 @@ export const login = async (body: ILoginBody): Promise<IApiResponse<ILoginRespon
             }
         });
 
-        const data: IApiResponse<ILoginResponse | null> = await response.json();
+        const data: IApiResponse<LoginResponse | null> = await response.json();
 
         return data;
 
     } catch(error) {
         console.log("Erro no login de usuário --> ", error);
+        return null;
+    }
+}
+
+export const currentUser = async (token: string): Promise<IApiResponse<CurrentUserResponse | null> | null> => {
+    try {
+        const response = await fetch(api + "/users/user", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data: IApiResponse<CurrentUserResponse | null> = await response.json();
+
+        return data;
+
+    } catch(error) {
+        console.log("Erro ao buscar usuário logado --> ", error);
         return null;
     }
 }
