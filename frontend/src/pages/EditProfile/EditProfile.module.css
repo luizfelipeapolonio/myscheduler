@@ -1,0 +1,139 @@
+.editProfile_container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 4rem 0;
+}
+
+.editProfile_container .back_button {
+    position: absolute;
+    top: 30px;
+    left: 150px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.editProfile_container .back_button span {
+    font-size: 1.8rem;
+}
+
+.editProfile_container .back_button svg {
+    font-size: 2.7rem;
+}
+
+.editProfile_container .back_button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.editProfile_container .back_button:hover svg {
+    color: #954dff;
+}
+
+.editProfile_container h1 {
+    margin-bottom: 1.8rem;
+}
+
+.editProfile_container p:nth-child(2) {
+    font-style: italic;
+    color: #b7b7ba;
+    margin-bottom: 2.5rem;
+}
+
+.editProfile_container form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.editProfile_container form label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    color: #a2a2a2;
+    font-weight: 600;
+    gap: 0.5rem;
+}
+
+.editProfile_container form input {
+    background-color: #0b0b0d;
+    color: #e1e1e6;
+    outline: none;
+    width: 100%;
+    font-size: 1.5rem;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+}
+
+.editProfile_container form input::placeholder {
+    color: #545456;
+}
+
+.editProfile_container form input:disabled {
+    color: #8c8c8c;
+    cursor: not-allowed;
+}
+
+.editProfile_container form input:focus,
+.editProfile_container .password:focus-within input {
+    border: 2px solid #954dff;
+    transition: 0.3s ease 0.1s;
+}
+
+.editProfile_container form input[name="password"],
+.editProfile_container form input[name="confirmPassword"] {
+    padding: 1rem 3.3rem 1rem 1rem;
+}
+
+.editProfile_container .password {
+    position: relative;
+}
+
+.editProfile_container .password button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-13%);
+    border: none;
+    background: transparent;
+}
+
+.editProfile_container .password button svg {
+    color: #58585b;
+    font-size: 2rem;
+}
+
+.editProfile_container .password:focus-within svg {
+    color: #954dff;
+    transition: 0.3s ease 0.1s;
+}
+
+.editProfile_container form input[type="submit"] {
+    background-color: #6700ff;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+    border: none;
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.editProfile_container form input[type="submit"]:disabled {
+    background-color: #954dff;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
