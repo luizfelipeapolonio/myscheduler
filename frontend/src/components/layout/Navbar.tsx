@@ -10,7 +10,8 @@ import {
     BsFillPersonFill, 
     BsBoxArrowInRight, 
     BsPersonAdd, 
-    BsBoxArrowLeft 
+    BsBoxArrowLeft,
+    BsPersonCircle 
 } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
@@ -67,6 +68,10 @@ const Navbar = () => {
                 ) : (
                     <>
                         <AuthUser authUser={authUser} type="full" align="center" />
+                        <Link to="/user" onClick={closeDropdownMenu}>
+                            <BsPersonCircle />
+                            Editar Perfil
+                        </Link>
                         <button onClick={logout}>
                             <BsBoxArrowLeft />
                             <span>Sair</span>
