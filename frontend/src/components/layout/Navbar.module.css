@@ -58,6 +58,7 @@
     width: 20%;
     border-radius: 8px;
     background-color: #292929;
+    z-index: 100;
 }
 
 .dropdown .dropdown_menu a {
