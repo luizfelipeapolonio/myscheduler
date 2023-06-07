@@ -12,6 +12,12 @@ export interface ILoginBody {
     password: string;
 }
 
+export interface IUpdateProfileBody {
+    name?: string;
+    password?: string;
+    confirmPassword?: string;
+}
+
 export interface ICreateUserResponse {
     token: string;
     id: string;

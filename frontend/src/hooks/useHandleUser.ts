@@ -3,7 +3,8 @@ import { IApiResponse } from "../types/shared.types";
 import { 
     ICreateUserBody, 
     ICreateUserResponse, 
-    ILoginBody, 
+    ILoginBody,
+    IUpdateProfileBody,
     LoginResponse, 
     CurrentUserResponse,
     ISignedUser
@@ -13,7 +14,7 @@ import { useState, useEffect } from "react";
 import { useAuthContext } from "../context/Auth/AuthContext";
 
 // Services
-import { register, login, currentUser } from "../services/userService";
+import { register, login, currentUser, update } from "../services/userService";
 
 // Utils
 import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
@@ -25,6 +26,7 @@ interface IHandleUser {
     signIn: (body: ILoginBody) => Promise<void>;
     signOut: () => void;
     getCurrentUser: () => Promise<void>;
+    updateProfile: (body: IUpdateProfileBody) => Promise<void>;
     reset: () => void;
     data: IApiResponse<UserResponse | null> | null;
     loading: boolean;
@@ -143,9 +145,48 @@ export function useHandleUser(): IHandleUser {
         }
     }
 
+    const updateProfile = async (body: IUpdateProfileBody): Promise<void> => {
+        const localStorageUser: ISignedUser | null = getUserFromLocalStorage();
+
+        if(localStorageUser === null) {
+            setError(true);
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const updateProfileResponse = await update(body, localStorageUser.token);
+
+            if(updateProfileResponse === null) setError(true);
+            if(updateProfileResponse && updateProfileResponse.status === "error") setError(true);
+
+            if(updateProfileResponse && updateProfileResponse.status === "success") {
+                if(updateProfileResponse.payload !== null) {
+                    const updatedLocalStorageUser = {
+                        token: localStorageUser.token,
+                        name: updateProfileResponse.payload.name,
+                        email: localStorageUser.email
+                    }
+
+                    localStorage.setItem("user", JSON.stringify(updatedLocalStorageUser));
+                }
+                setSuccess(true)
+            };
+
+            setData(updateProfileResponse);
+
+        } catch(error) {
+            console.log("Erro ao atualizar perfil de usuário --> ", error);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const signOut = (): void => {
         localStorage.removeItem("user");
-        setChanged(true);
+        setChanged((changed) => !changed);
     }
 
     const reset = (): void => {
@@ -158,7 +199,8 @@ export function useHandleUser(): IHandleUser {
         createAndSignInUser, 
         signIn, 
         signOut, 
-        getCurrentUser, 
+        getCurrentUser,
+        updateProfile,
         reset, 
         data, 
         loading, 

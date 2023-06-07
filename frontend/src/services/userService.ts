@@ -3,6 +3,7 @@ import { IApiResponse } from "../types/shared.types";
 import { 
     ICreateUserBody, 
     ILoginBody, 
+    IUpdateProfileBody,
     ICreateUserResponse, 
     LoginResponse, 
     CurrentUserResponse 
@@ -66,6 +67,27 @@ export const currentUser = async (token: string): Promise<IApiResponse<CurrentUs
 
     } catch(error) {
         console.log("Erro ao buscar usuário logado --> ", error);
+        return null;
+    }
+}
+
+export const update = async (body: IUpdateProfileBody, token: string): Promise<IApiResponse<CurrentUserResponse | null> | null> => {
+    try {
+        const response = await fetch(api + "/users/user", {
+            method: "PATCH",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data: IApiResponse<CurrentUserResponse | null> = await response.json();
+
+        return data;
+
+    } catch(error) {
+        console.log("Erro ao atualizar usuário --> ", error);
         return null;
     }
 }

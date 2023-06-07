@@ -3,12 +3,16 @@ import styles from "./EditProfile.module.css";
 
 // Components
 import Loading from "../../components/Loading";
+import FlashMessage from "../../components/FlashMessage";
 
 // Icons
 import { BsFillEyeFill, BsFillEyeSlashFill, BsArrowLeft } from "react-icons/bs";
 
 // Types
-import { CurrentUserResponse } from "../../types/user.types";
+import { CurrentUserResponse, IUpdateProfileBody } from "../../types/user.types";
+
+// Utils
+import { extractValidationMessages } from "../../utils/extractValidationMessages";
 
 import { Link } from "react-router-dom";
 import { useState, useEffect, FormEvent } from "react";
@@ -19,11 +23,12 @@ const EditProfile = () => {
     const [name, setName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword]= useState<string>("");
+    const [message, setMessage] = useState<string>("");
 
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const [isConfirmPassVisible, setIsConfirmPassVisible] = useState<boolean>(false);
 
-    const { getCurrentUser, reset, data } = useHandleUser();
+    const { getCurrentUser, updateProfile, reset, data, loading, success, error } = useHandleUser();
 
     const togglePassword = (): void => setIsPasswordVisible((isVisible) => !isVisible);
     const toggleConfirmPass = (): void => setIsConfirmPassVisible((isVisible) => !isVisible);
@@ -39,17 +44,54 @@ const EditProfile = () => {
                 setEmail((data.payload as CurrentUserResponse).email);
                 setName((data.payload as CurrentUserResponse).name);
             }
-        }
-    }, [data]);
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+            if(data.message.includes("validação") && data.status === "error") {
+                const extractedMessages: string[] | null = extractValidationMessages(data);
+
+                if(extractedMessages !== null) {
+                    setMessage(extractedMessages[0]);
+                }
+            } else {
+                setMessage(data.message);
+            }
+            
+            if(data.message.includes("logado")) setMessage("");
+        }
+
+        if(!data && error) {
+            setMessage("Ocorreu um erro! Por favor, tente mais tarde");
+        }
+
+    }, [data, error]);
+
+    useEffect(() => {
+        if(message) {
+            const timer: number = setTimeout(() => {
+                setMessage("");
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
+
+        reset();
+
+        let updateBody: IUpdateProfileBody = {};
+
+        if(name) updateBody.name = name;
+        if(password) updateBody.password = password;
+        if(confirmPassword) updateBody.confirmPassword = confirmPassword;
+
+        await updateProfile(updateBody);
     }
 
     return (
         <>
-            {!data && <Loading type="default" />}
-            {data && (
+            {loading && <Loading type="default" />}
+            {!loading && (
                 <div className={styles.editProfile_container}>
                     <Link to="/" className={styles.back_button}>
                         <BsArrowLeft />
@@ -58,6 +100,13 @@ const EditProfile = () => {
                     <h1>Editar Perfil</h1>
                     <p>Mude o seu nome ou senha atual</p>
                     <form onSubmit={handleSubmit}>
+                        {message && (
+                            <FlashMessage 
+                                type={success ? "success" : "error"}
+                                message={message}
+                                marginBottom="2rem"
+                            />
+                        )}
                         <label>
                             <span>E-mail</span>
                             <input 
@@ -75,7 +124,6 @@ const EditProfile = () => {
                                 name="name"
                                 onChange={(e) => setName(e.target.value)}
                                 value={name || ""}
-                                autoFocus
                             />
                         </label>
                         <label className={styles.password}>
@@ -85,9 +133,9 @@ const EditProfile = () => {
                                 placeholder="Sua nova senha" 
                                 name="password"
                                 onChange={(e) => setPassword(e.target.value)}
-                                value={password || ""}
+                                value={password}
                             />
-                            <button onClick={togglePassword}>
+                            <button type="button" onClick={togglePassword}>
                                 {isPasswordVisible ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
                             </button>
                         </label>
@@ -98,13 +146,14 @@ const EditProfile = () => {
                                 placeholder="Confirme sua nova senha" 
                                 name="confirmPassword"
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                value={confirmPassword || ""}
+                                value={confirmPassword}
                             />
-                            <button onClick={toggleConfirmPass}>
+                            <button type="button" onClick={toggleConfirmPass}>
                                 {isConfirmPassVisible ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
                             </button>
                         </label>
-                        <input type="submit" value="Atualizar" />
+                        {!loading && <input type="submit" value="Atualizar" />}
+                        {loading && <input type="submit" value="Aguarde..." disabled />}
                     </form>
                 </div>
             )}
