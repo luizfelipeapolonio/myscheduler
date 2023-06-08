@@ -11,7 +11,8 @@ import {
     BsBoxArrowInRight, 
     BsPersonAdd, 
     BsBoxArrowLeft,
-    BsPersonCircle 
+    BsPersonCircle,
+    BsPersonFillExclamation 
 } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
@@ -19,7 +20,11 @@ import { useState } from "react";
 import { useHandleUser } from "../../hooks/useHandleUser";
 import { useAuth } from "../../hooks/useAuth";
 
-const Navbar = () => {
+interface NavbarProps {
+    setState: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Navbar = ({ setState }: NavbarProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     
     const { signOut } = useHandleUser();
@@ -30,6 +35,11 @@ const Navbar = () => {
 
     const logout = (): void => {
         signOut();
+        closeDropdownMenu();
+    }
+
+    const openDeleteModal = (): void => {
+        setState(true);
         closeDropdownMenu();
     }
 
@@ -72,6 +82,10 @@ const Navbar = () => {
                             <BsPersonCircle />
                             Editar Perfil
                         </Link>
+                        <button onClick={openDeleteModal}>
+                            <BsPersonFillExclamation />
+                            <span>Excluir Conta</span>
+                        </button>
                         <button onClick={logout}>
                             <BsBoxArrowLeft />
                             <span>Sair</span>

@@ -3,13 +3,18 @@ import styles from "./Root.module.css";
 
 // Components
 import Navbar from "./Navbar";
+import DeleteModal from "../DeleteModal";
 
 import { Outlet, ScrollRestoration } from "react-router-dom";
+import { useState } from "react";
 
 const Root = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
     return (
-        <>
-            <Navbar />
+        <>  
+            {isOpen && <DeleteModal setState={setIsOpen} />}
+            <Navbar setState={setIsOpen} />
             <main className={styles.main}>
                 <Outlet />
                 <ScrollRestoration />
