@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { useAuthContext } from "../context/Auth/AuthContext";
 
 // Services
-import { register, login, currentUser, update } from "../services/userService";
+import { register, login, currentUser, update, deleteUser } from "../services/userService";
 
 // Utils
 import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
@@ -27,6 +27,7 @@ interface IHandleUser {
     signOut: () => void;
     getCurrentUser: () => Promise<void>;
     updateProfile: (body: IUpdateProfileBody) => Promise<void>;
+    deleteUserAccount: () => Promise<void>;
     reset: () => void;
     data: IApiResponse<UserResponse | null> | null;
     loading: boolean;
@@ -184,6 +185,37 @@ export function useHandleUser(): IHandleUser {
         }
     }
 
+    const deleteUserAccount = async (): Promise<void> => {
+        const localStorageUser: ISignedUser | null = getUserFromLocalStorage();
+
+        if(localStorageUser === null) {
+            setError(true);
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const deleteUserResponse = await deleteUser(localStorageUser.token);
+
+            if(deleteUserResponse === null) setError(true);
+            if(deleteUserResponse && deleteUserResponse.status === "error") setError(true);
+
+            if(deleteUserResponse && deleteUserResponse.status === "success") {
+                signOut();
+                setSuccess(true);
+            }
+
+            setData(deleteUserResponse);
+
+        } catch(error) {
+            console.log("Erro ao deletar conta do usuário --> ", error);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const signOut = (): void => {
         localStorage.removeItem("user");
         setChanged((changed) => !changed);
@@ -201,6 +233,7 @@ export function useHandleUser(): IHandleUser {
         signOut, 
         getCurrentUser,
         updateProfile,
+        deleteUserAccount,
         reset, 
         data, 
         loading, 

@@ -91,3 +91,23 @@ export const update = async (body: IUpdateProfileBody, token: string): Promise<I
         return null;
     }
 }
+
+export const deleteUser = async (token: string): Promise<IApiResponse<CurrentUserResponse | null> | null> => {
+    try {
+        const response = await fetch(api + "/users/user", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data: IApiResponse<CurrentUserResponse | null> = await response.json();
+
+        return data;
+
+    } catch(error) {
+        console.log("Erro ao excluir usuário --> ", error);
+        return null;
+    }
+}
