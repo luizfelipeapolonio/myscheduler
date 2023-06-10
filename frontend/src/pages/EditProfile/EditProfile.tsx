@@ -34,7 +34,6 @@ const EditProfile = () => {
     const toggleConfirmPass = (): void => setIsConfirmPassVisible((isVisible) => !isVisible);
 
     useEffect(() => {
-        reset();
         getCurrentUser();
     }, []);
 
