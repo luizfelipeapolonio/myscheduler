@@ -1,0 +1,91 @@
+import { useState, useEffect } from "react";
+
+interface IHandleDate {
+    nextMonth: () => void;
+    previousMonth: () => void;
+    month: string;
+    year: number;
+    monthDays: number[];
+}
+
+const monthNames = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
+export function useHandleDate(): IHandleDate {
+    const [month, setMonth] = useState<string>("");
+    const [year, setYear] = useState<number>(0);
+    const [monthDays, setMonthDays] = useState<number[]>([]);
+    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
+
+    const date = new Date();
+
+    const getCurrentMonth = (): void => {
+        const month: number = date.getMonth();
+        setCurrentMonthIndex(month);
+        setMonth(monthNames[month]);
+    }
+
+    const getCurrentYear = (): void => {
+        const year: number = date.getFullYear();
+        setYear(year);
+    }
+
+    const nextMonth = (): void => {
+        setCurrentMonthIndex((currentMonth) => currentMonth + 1);
+    }
+
+    const previousMonth = (): void => {
+        setCurrentMonthIndex((currentMonth) => currentMonth - 1);
+    }
+
+    const allMonthDays = (): void => {
+        const lastDayOfMonth = new Date(year, currentMonthIndex + 1, 0).getDate();
+        const lastDayOfPreviousMonth = new Date(year, currentMonthIndex, 0).getDate();
+        const firstWeekDayOfMonth = new Date(year, currentMonthIndex, 1).getDay();
+        const lastWeekDayOfMonth = new Date(year, currentMonthIndex, lastDayOfMonth).getDay();
+
+        const monthDaysArray: number[] = [];
+
+        // Set every day of the month
+        for (let i = 1; i <= lastDayOfMonth; i++) {
+            monthDaysArray.push(i);
+        }
+
+        // Set the last days of the previous month
+        for (let i = 0; i < firstWeekDayOfMonth; i++) {
+            monthDaysArray.unshift(lastDayOfPreviousMonth - i);
+        }
+
+        // Set the first days of the next month
+        for (let i = lastWeekDayOfMonth; i < 6; i++) {
+            monthDaysArray.push((i - lastWeekDayOfMonth) + 1);
+        }
+
+        setMonthDays(monthDaysArray);
+    }
+
+    useEffect(() => {
+        getCurrentMonth();
+        getCurrentYear();
+        allMonthDays();
+    }, []);
+    
+    useEffect(() => {
+        setMonth(monthNames[currentMonthIndex]);
+        allMonthDays();
+
+        if(currentMonthIndex < 0 || currentMonthIndex > 11) {
+            const newDate = new Date(year, currentMonthIndex);
+            const newMonth = newDate.getMonth();
+            const newYear = newDate.getFullYear();
+
+            setCurrentMonthIndex(newMonth);
+            setYear(newYear);
+        }
+
+    }, [currentMonthIndex]);
+
+    return { nextMonth, previousMonth, month, year, monthDays };
+}
