@@ -6,6 +6,7 @@ interface IHandleDate {
     month: string;
     year: number;
     monthDays: number[];
+    today: number;
 }
 
 const monthNames = [
@@ -18,6 +19,7 @@ export function useHandleDate(): IHandleDate {
     const [year, setYear] = useState<number>(0);
     const [monthDays, setMonthDays] = useState<number[]>([]);
     const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
+    const [today, setToday] = useState<number>(0);
 
     const date = new Date();
 
@@ -50,6 +52,13 @@ export function useHandleDate(): IHandleDate {
 
         // Set every day of the month
         for (let i = 1; i <= lastDayOfMonth; i++) {
+            // Check for current day
+            if(i === date.getDate() && 
+               currentMonthIndex === date.getMonth() && 
+               year === date.getFullYear()) {
+                setToday(i);
+            }
+
             monthDaysArray.push(i);
         }
 
@@ -73,6 +82,7 @@ export function useHandleDate(): IHandleDate {
     }, []);
     
     useEffect(() => {
+        setToday(0);
         setMonth(monthNames[currentMonthIndex]);
         allMonthDays();
 
@@ -87,5 +97,5 @@ export function useHandleDate(): IHandleDate {
 
     }, [currentMonthIndex]);
 
-    return { nextMonth, previousMonth, month, year, monthDays };
+    return { nextMonth, previousMonth, month, year, monthDays, today };
 }
