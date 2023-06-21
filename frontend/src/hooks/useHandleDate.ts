@@ -5,7 +5,7 @@ interface IHandleDate {
     previousMonth: () => void;
     month: string;
     year: number;
-    monthDays: number[];
+    monthDays: (number | string)[];
     today: number;
 }
 
@@ -17,7 +17,7 @@ const monthNames = [
 export function useHandleDate(): IHandleDate {
     const [month, setMonth] = useState<string>("");
     const [year, setYear] = useState<number>(0);
-    const [monthDays, setMonthDays] = useState<number[]>([]);
+    const [monthDays, setMonthDays] = useState<(number | string)[]>([]);
     const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
     const [today, setToday] = useState<number>(0);
 
@@ -48,7 +48,7 @@ export function useHandleDate(): IHandleDate {
         const firstWeekDayOfMonth = new Date(year, currentMonthIndex, 1).getDay();
         const lastWeekDayOfMonth = new Date(year, currentMonthIndex, lastDayOfMonth).getDay();
 
-        const monthDaysArray: number[] = [];
+        const monthDaysArray: (number | string)[] = [];
 
         // Set every day of the month
         for (let i = 1; i <= lastDayOfMonth; i++) {
@@ -64,12 +64,12 @@ export function useHandleDate(): IHandleDate {
 
         // Set the last days of the previous month
         for (let i = 0; i < firstWeekDayOfMonth; i++) {
-            monthDaysArray.unshift(lastDayOfPreviousMonth - i);
+            monthDaysArray.unshift((lastDayOfPreviousMonth - i).toString());
         }
 
         // Set the first days of the next month
         for (let i = lastWeekDayOfMonth; i < 6; i++) {
-            monthDaysArray.push((i - lastWeekDayOfMonth) + 1);
+            monthDaysArray.push(((i - lastWeekDayOfMonth) + 1).toString());
         }
 
         setMonthDays(monthDaysArray);
