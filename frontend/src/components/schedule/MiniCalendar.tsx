@@ -6,18 +6,10 @@ import { useHandleDate } from "../../hooks/useHandleDate";
 const MiniCalendar = () => {
     const { nextMonth, previousMonth, month, year, monthDays, today } = useHandleDate();
 
-    // console.log("MÊS: ", month);
-    // console.log("ANO: ", year);
-    // console.log("DIAS: ", monthDays);
-    console.log("HOJE: ", today);
-
     return (
         <div className={styles.miniCalendar_container}>
             <header>
-                <div className={styles.month_year}>
-                    <span>{month}</span>
-                    <span>{year}</span>
-                </div>
+                <span>{month} de {year}</span>
                 <div className={styles.actions}>
                     <button type="button" onClick={previousMonth}>{"<"}</button>
                     <button type="button" onClick={nextMonth}>{">"}</button>
@@ -33,7 +25,10 @@ const MiniCalendar = () => {
                 <span>Sáb</span>
                 {monthDays.map((day) => (
                     <li 
-                        className={today === day ? `${styles.today}` : ""} 
+                        className={
+                            `${today === day ? styles.today : ""} 
+                             ${typeof day === "string" ?  styles.inactive : ""}`
+                        } 
                         key={crypto.randomUUID()}
                     >
                         {day}
