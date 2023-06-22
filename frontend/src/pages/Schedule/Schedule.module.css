@@ -1,0 +1,18 @@
+.schedule_container {
+    display: flex;
+    width: 100%;
+}
+
+.schedule_container aside {
+    flex-grow: 1;
+    border-right: 1px solid #545456;
+    padding: 0 1rem;
+}
+
+.schedule_container main {
+    flex-grow: 5;
+}
+
+.schedule_container main ul {
+    list-style: none;
+}
