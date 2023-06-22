@@ -1,0 +1,29 @@
+.scheduler_container {
+    font-size: 1.6rem;
+    height: 100%;
+}
+
+.scheduler_container div:first-child {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(max-content, 100%));
+    text-align: center;
+    border-bottom: 1px solid #545456;
+}
+
+.scheduler_container div:first-child span {
+    color: #954dff;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.scheduler_container ul {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(max-content, 100%));
+    height: calc(100% - 4.5rem);
+    text-align: center;
+}
+
+.scheduler_container ul li {
+    border-right: 1px solid #545456;
+    border-bottom: 1px solid #545456;
+}
