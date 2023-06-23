@@ -24,6 +24,26 @@
 }
 
 .scheduler_container ul li {
+    position: relative;
+    z-index: 1;
+    padding-top: 1rem;
     border-right: 1px solid #545456;
     border-bottom: 1px solid #545456;
+}
+
+.scheduler_container ul .today::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    z-index: -1;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: #6700ff;
+    transform: translateX(-50%);
+}
+
+.scheduler_container ul .inactive {
+    color: #787878;
 }
