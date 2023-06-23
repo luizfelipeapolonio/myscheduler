@@ -1,11 +1,12 @@
 // CSS
 import styles from "./Scheduler.module.css";
 
-import { useHandleDate } from "../../hooks/useHandleDate";
+interface SchedulerProps {
+    monthDays: (number | string)[];
+    today: number;
+}
 
-const Scheduler = () => {
-    const { monthDays } = useHandleDate();
-
+const Scheduler = ({ monthDays, today }: SchedulerProps) => {
     return (
         <div className={styles.scheduler_container}>
             <div>
@@ -19,7 +20,15 @@ const Scheduler = () => {
             </div>
             <ul>
                 {monthDays.map((day) => (
-                    <li key={crypto.randomUUID()}>{day}</li>
+                    <li 
+                        className={
+                            `${today === day ? styles.today : ""} 
+                             ${typeof day === "string" ?  styles.inactive : ""}`
+                        }
+                        key={crypto.randomUUID()}
+                    >
+                        {day}
+                    </li>
                 ))}
             </ul>
         </div>
