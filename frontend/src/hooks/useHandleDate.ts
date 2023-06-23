@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 interface IHandleDate {
+    getToday: () => void;
     nextMonth: () => void;
     previousMonth: () => void;
     month: string;
@@ -32,6 +33,11 @@ export function useHandleDate(): IHandleDate {
     const getCurrentYear = (): void => {
         const year: number = date.getFullYear();
         setYear(year);
+    }
+
+    const getToday = (): void => {
+        getCurrentMonth();
+        getCurrentYear();
     }
 
     const nextMonth = (): void => {
@@ -97,5 +103,5 @@ export function useHandleDate(): IHandleDate {
 
     }, [currentMonthIndex]);
 
-    return { nextMonth, previousMonth, month, year, monthDays, today };
+    return { getToday, nextMonth, previousMonth, month, year, monthDays, today };
 }
