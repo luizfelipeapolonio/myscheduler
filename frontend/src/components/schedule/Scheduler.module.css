@@ -13,14 +13,15 @@
 .scheduler_container div:first-child span {
     color: #954dff;
     font-weight: 600;
-    padding: 1rem;
+    padding: 0.4rem;
 }
 
 .scheduler_container ul {
     display: grid;
     grid-template-columns: repeat(7, minmax(max-content, 100%));
-    height: calc(100% - 4.5rem);
+    height: calc(100% - 3.4rem);
     text-align: center;
+    list-style: none;
 }
 
 .scheduler_container ul li {
