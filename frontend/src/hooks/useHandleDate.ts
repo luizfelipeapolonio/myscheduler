@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 interface IHandleDate {
     getToday: () => void;
+    goToDate: (month: string, year: number) => void;
     nextMonth: () => void;
     previousMonth: () => void;
     month: string;
@@ -38,6 +39,12 @@ export function useHandleDate(): IHandleDate {
     const getToday = (): void => {
         getCurrentMonth();
         getCurrentYear();
+    }
+
+    const goToDate = (month: string, year: number): void => {
+        const monthIndex: number = monthNames.indexOf(month);
+        setCurrentMonthIndex(monthIndex);
+        setYear(year);
     }
 
     const nextMonth = (): void => {
@@ -101,7 +108,7 @@ export function useHandleDate(): IHandleDate {
             setYear(newYear);
         }
 
-    }, [currentMonthIndex]);
+    }, [currentMonthIndex, year]);
 
-    return { getToday, nextMonth, previousMonth, month, year, monthDays, today };
+    return { getToday, goToDate, nextMonth, previousMonth, month, year, monthDays, today };
 }
