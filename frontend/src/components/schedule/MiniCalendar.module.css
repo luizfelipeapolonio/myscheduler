@@ -24,10 +24,26 @@
 .miniCalendar_container header .actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
 }
 
-.miniCalendar_container header .actions button {
+.miniCalendar_container header .actions button:first-child {
+    background-color: #6700ff;
+    color: #e1e1e6;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    padding: 0.2rem 0.8rem;
+    margin-right: 0.7rem;
+    transition: 0.1s ease-in;
+}
+
+.miniCalendar_container header .actions button:first-child:hover {
+    background-color: #8636ff;
+}
+
+.miniCalendar_container header .actions button:nth-child(2),
+.miniCalendar_container header .actions button:last-child {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,7 +57,12 @@
     background: transparent;
 }
 
-.miniCalendar_container header .actions button:hover {
+.miniCalendar_container header .actions button:nth-child(2) {
+    margin-right: 0.4rem;
+}
+
+.miniCalendar_container header .actions button:nth-child(2):hover,
+.miniCalendar_container header .actions button:last-child:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -61,6 +82,7 @@
 .miniCalendar_container ul li {
     position: relative;
     z-index: 1;
+    cursor: pointer;
 }
 
 .miniCalendar_container ul .today::before {
@@ -78,4 +100,5 @@
 
 .miniCalendar_container ul .inactive {
     color: #858585;
+    cursor: default;
 }
