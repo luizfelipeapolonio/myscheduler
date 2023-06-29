@@ -4,9 +4,10 @@ import styles from "./Scheduler.module.css";
 interface SchedulerProps {
     monthDays: (number | string)[];
     today: number;
+    OpenSidePanel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Scheduler = ({ monthDays, today }: SchedulerProps) => {
+const Scheduler = ({ monthDays, today, OpenSidePanel }: SchedulerProps) => {
     return (
         <div className={styles.scheduler_container}>
             <div>
@@ -26,6 +27,7 @@ const Scheduler = ({ monthDays, today }: SchedulerProps) => {
                              ${typeof day === "string" ?  styles.inactive : ""}`
                         }
                         key={crypto.randomUUID()}
+                        onClick={typeof day === "number" ? () => OpenSidePanel(true) : undefined}
                     >
                         {day}
                     </li>
