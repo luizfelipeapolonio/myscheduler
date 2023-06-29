@@ -14,10 +14,20 @@
 .fade_side .side_container {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    width: 30%;
+    padding: 0 1.8rem 1rem;
+    width: 40%;
+    max-height: 100vh;
+    overflow: auto;
     background-color: rgb(31, 31, 36);
     animation: slideOpeningEffect 0.3s ease-in-out;
+}
+
+.fade_side .side_container header {
+    position: sticky;
+    top: 0;
+    padding: 1rem 0;
+    background-color: rgb(31, 31, 36);
+    margin-bottom: 1rem;
 }
 
 .fade_side .side_container header button {
