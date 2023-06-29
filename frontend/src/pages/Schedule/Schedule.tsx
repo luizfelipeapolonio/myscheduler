@@ -1,8 +1,10 @@
 // CSS
 import styles from "./Schedule.module.css";
 
+// Components
 import MiniCalendar from "../../components/schedule/MiniCalendar";
 import Scheduler from "../../components/schedule/Scheduler";
+import SidePanel from "../../components/schedule/SidePanel";
 
 import { useEffect, useState } from "react";
 import { useHandleUser } from "../../hooks/useHandleUser";
@@ -14,6 +16,7 @@ const Schedule = () => {
 
     const [goToMonth, setGoToMonth] = useState<string>("");
     const [goToYear, setGoToYear] = useState<number>(0);
+    const [isSidePanelOpen, setIsSidePanelOpen] = useState<boolean>(false);
 
     useEffect(() => {
         reset();
@@ -39,8 +42,15 @@ const Schedule = () => {
                     </div>
                     <span>{month} de {year}</span>
                 </header>
-                <Scheduler monthDays={monthDays} today={today} />
+                <Scheduler 
+                    monthDays={monthDays} 
+                    today={today} 
+                    OpenSidePanel={setIsSidePanelOpen} 
+                />
             </main>
+            {isSidePanelOpen && (
+                <SidePanel closePanel={setIsSidePanelOpen} />
+            )}
         </div>
     );
 }
