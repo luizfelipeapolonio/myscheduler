@@ -28,6 +28,7 @@
     padding: 1rem 0;
     background-color: rgb(25, 25, 29);
     margin-bottom: 1rem;
+    z-index: 200;
 }
 
 .fade_side .side_container header button {

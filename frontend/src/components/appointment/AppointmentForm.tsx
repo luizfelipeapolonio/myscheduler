@@ -2,6 +2,38 @@
 import styles from "./AppointmentForm.module.css";
 
 const AppointmentForm = () => {
+    const generateSelectHours = (): JSX.Element[] => {
+        const hoursArray: number[] = [];
+
+        for(let i = 0; i <= 23; i++) {
+            hoursArray.push(i);
+        }
+
+        return hoursArray.map((hour) => (
+            <option key={hour} value={hour} >
+                {hour}
+            </option>
+        ));
+    }
+
+    const generateSelectMinutes = (): JSX.Element[] => {
+        const minutesArray: string[] = [];
+
+        for(let i = 0; i <= 59; i++) {
+            if(i < 10) {
+                minutesArray.push(`0${i}`);
+            } else {
+                minutesArray.push(i.toString());
+            }
+        }
+
+        return minutesArray.map((minute) => (
+            <option key={minute} value={minute}>
+                {minute}
+            </option>
+        ));
+    }
+
     return (
         <div className={styles.appointmentForm_container}>
             <h2>Criar compromisso</h2>
@@ -50,13 +82,13 @@ const AppointmentForm = () => {
                             <span>Adicionar horário</span>
                         </label>
                     <div className={styles.hour}>
-                        <select>
-                            <option value="default">Hora</option>
-                            <option>12</option>
-                            <option>13</option>
+                        <select defaultValue="default">
+                            <option value="default" disabled>Hora</option>
+                            {generateSelectHours()}
                         </select>
-                        <select>
-                            <option value="default">Minuto</option>
+                        <select defaultValue="default">
+                            <option value="default" disabled>Minuto</option>
+                            {generateSelectMinutes()}
                         </select>
                     </div>
                 </fieldset>
