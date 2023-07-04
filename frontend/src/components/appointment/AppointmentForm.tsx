@@ -1,7 +1,28 @@
 // CSS
 import styles from "./AppointmentForm.module.css";
 
+// Icons
+import { FaAngleDown } from "react-icons/fa6";
+
+import { useState } from "react";
+
 const AppointmentForm = () => {
+    const [hour, setHour] = useState<string>("");
+    const [minute, setMinute] = useState<string>("");
+    const [isHourOpen, setIsHourOpen] = useState<boolean>(false);
+    const [isMinuteOpen, setIsMinuteOpen] = useState<boolean>(false);
+
+    const toggleHourSelect = (): void => setIsHourOpen((isOpen) => !isOpen);
+    const toggleMinuteSelect = (): void => setIsMinuteOpen((isOpen) => !isOpen);
+
+    const handleHour = (e: React.MouseEvent<HTMLSpanElement>): void => {
+        if(e.currentTarget.id === "hour") {
+            setHour(e.currentTarget.innerText);
+        } else {
+            setMinute(e.currentTarget.innerText);
+        }
+    }
+
     const generateSelectHours = (): JSX.Element[] => {
         const hoursArray: number[] = [];
 
@@ -10,9 +31,9 @@ const AppointmentForm = () => {
         }
 
         return hoursArray.map((hour) => (
-            <option key={hour} value={hour} >
+            <span key={hour} id="hour" onClick={handleHour}>
                 {hour}
-            </option>
+            </span>
         ));
     }
 
@@ -28,9 +49,9 @@ const AppointmentForm = () => {
         }
 
         return minutesArray.map((minute) => (
-            <option key={minute} value={minute}>
+            <span key={minute} id="minute" onClick={handleHour}>
                 {minute}
-            </option>
+            </span>
         ));
     }
 
@@ -43,7 +64,7 @@ const AppointmentForm = () => {
                 <fieldset className={styles.appointment_type}>
                     <legend>Tipo</legend>
                     <label>
-                        <input name="type" type="radio" value="lembrete" />
+                        <input name="type" type="radio" value="lembrete" checked />
                         <span>Lembrete</span>
                     </label>
                     <label>
@@ -62,7 +83,7 @@ const AppointmentForm = () => {
                         <span>Alta</span>
                     </label>
                     <label>
-                        <input name="priority" type="radio" value="media" />
+                        <input name="priority" type="radio" value="media" checked />
                         <span>Média</span>
                     </label>
                     <label>
@@ -74,7 +95,7 @@ const AppointmentForm = () => {
                     <legend>Data</legend>
                     <p>29 de Junho de 2023</p>
                         <label>
-                            <input name="date" type="radio" value="default" />
+                            <input name="date" type="radio" value="default" checked />
                             <span>O dia inteiro</span>
                         </label>
                         <label>
@@ -82,14 +103,30 @@ const AppointmentForm = () => {
                             <span>Adicionar horário</span>
                         </label>
                     <div className={styles.hour}>
-                        <select defaultValue="default">
-                            <option value="default" disabled>Hora</option>
-                            {generateSelectHours()}
-                        </select>
-                        <select defaultValue="default">
-                            <option value="default" disabled>Minuto</option>
-                            {generateSelectMinutes()}
-                        </select>
+                        <div 
+                            tabIndex={0} 
+                            className={styles.select} 
+                            onClick={toggleHourSelect} 
+                            onBlur={() => setIsHourOpen(false)}
+                        >
+                            {hour && <span>{hour} <FaAngleDown /></span>} 
+                            {!hour && <p>Hora <FaAngleDown /></p>}
+                            <div className={`${styles.dropdown_select} ${isHourOpen ? styles.open : ""}`}>
+                                {generateSelectHours()}
+                            </div>
+                        </div>
+                        <div
+                            tabIndex={0}
+                            className={styles.select} 
+                            onClick={toggleMinuteSelect} 
+                            onBlur={() => setIsMinuteOpen(false)}
+                        >
+                            {minute && <span>{minute} <FaAngleDown /></span>} 
+                            {!minute && <p>Minuto <FaAngleDown /></p>}
+                            <div className={`${styles.dropdown_select} ${isMinuteOpen ? styles.open : ""}`}>
+                                {generateSelectMinutes()}
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <textarea 

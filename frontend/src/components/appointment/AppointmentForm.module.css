@@ -143,14 +143,96 @@
 .appointmentForm_container .appointment_date .hour {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.7rem;
 }
 
-.appointmentForm_container .appointment_date .hour select {
-    background-color: #23232a;
+.appointmentForm_container .appointment_date .hour .select {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #3b3b48;
     color: #e1e1e6;
     font-size: 1.5rem;
     padding: 0.4rem;
     outline: none;
     border: none;
+    border-radius: 5px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    user-select: none;
+}
+
+.appointmentForm_container .appointment_date .hour .select:focus {
+    border-bottom: 3px solid #7010fe;
+}
+
+.appointmentForm_container .appointment_date .hour .select:not(:focus),
+.appointmentForm_container .appointment_date .hour .select:not(:has(.open)) {
+    border-bottom: 3px solid transparent;
+}
+
+.appointmentForm_container .appointment_date .hour .select span,
+.appointmentForm_container .appointment_date .hour .select p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    color: #e1e1e6;
+    font-weight: 600;
+    padding: 0 0.4rem;
+}
+
+.appointmentForm_container .appointment_date .hour .select p {
+    color: #a8a8a8;
+}
+
+.appointmentForm_container .appointment_date .hour .select span svg {
+    color: #e1e1e6;
+}
+
+.appointmentForm_container .appointment_date .hour .select .dropdown_select {
+    position: absolute;
+    top: 37px;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    font-size: 1.6rem;
+    width: 100%;
+    max-height: 13rem;
+    padding: 0.4rem;
+    background-color: #3b3b48;
+    overflow: auto;
+    border-radius: 5px;
+}
+
+.appointmentForm_container .appointment_date .hour .select .dropdown_select.open {
+    display: flex;
+}
+
+.appointmentForm_container .appointment_date .hour .select .dropdown_select span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0;
+    color: #e1e1e6;
+}
+
+.appointmentForm_container .appointment_date .hour .select .dropdown_select span:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.select .dropdown_select::-webkit-scrollbar {
+    width: 0.9rem;
+}
+
+.select .dropdown_select::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+}
+
+.select .dropdown_select::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
 }
