@@ -6,6 +6,8 @@ import { FaAngleDown } from "react-icons/fa6";
 
 import { useState } from "react";
 
+import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
+
 const AppointmentForm = () => {
     const [hour, setHour] = useState<string>("");
     const [minute, setMinute] = useState<string>("");
@@ -14,6 +16,8 @@ const AppointmentForm = () => {
 
     const toggleHourSelect = (): void => setIsHourOpen((isOpen) => !isOpen);
     const toggleMinuteSelect = (): void => setIsMinuteOpen((isOpen) => !isOpen);
+
+    const { date } = useDateToScheduleContext();
 
     const handleHour = (e: React.MouseEvent<HTMLSpanElement>): void => {
         if(e.currentTarget.id === "hour") {
@@ -64,7 +68,7 @@ const AppointmentForm = () => {
                 <fieldset className={styles.appointment_type}>
                     <legend>Tipo</legend>
                     <label>
-                        <input name="type" type="radio" value="lembrete" checked />
+                        <input name="type" type="radio" value="lembrete" defaultChecked />
                         <span>Lembrete</span>
                     </label>
                     <label>
@@ -83,7 +87,7 @@ const AppointmentForm = () => {
                         <span>Alta</span>
                     </label>
                     <label>
-                        <input name="priority" type="radio" value="media" checked />
+                        <input name="priority" type="radio" value="media" defaultChecked />
                         <span>Média</span>
                     </label>
                     <label>
@@ -93,9 +97,9 @@ const AppointmentForm = () => {
                 </fieldset>
                 <fieldset className={styles.appointment_date}>
                     <legend>Data</legend>
-                    <p>29 de Junho de 2023</p>
+                        {date && <p>{date.day} de {date.month} de {date.year}</p>}
                         <label>
-                            <input name="date" type="radio" value="default" checked />
+                            <input name="date" type="radio" value="default" defaultChecked />
                             <span>O dia inteiro</span>
                         </label>
                         <label>

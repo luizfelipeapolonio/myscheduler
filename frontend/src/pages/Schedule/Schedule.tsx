@@ -44,7 +44,9 @@ const Schedule = () => {
                 </header>
                 <Scheduler 
                     monthDays={monthDays} 
-                    today={today} 
+                    today={today}
+                    month={month}
+                    year={year}
                     OpenSidePanel={setIsSidePanelOpen} 
                 />
             </main>

@@ -1,13 +1,33 @@
 // CSS
 import styles from "./Scheduler.module.css";
 
+import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
+
 interface SchedulerProps {
     monthDays: (number | string)[];
     today: number;
+    month: string;
+    year: number;
     OpenSidePanel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Scheduler = ({ monthDays, today, OpenSidePanel }: SchedulerProps) => {
+const Scheduler = ({ monthDays, today, month, year, OpenSidePanel }: SchedulerProps) => {
+    const { setDate } = useDateToScheduleContext();
+
+    const handleSchedule = (day: string | number): void => {
+        if(typeof day === "string") return;
+
+        OpenSidePanel(true);
+
+        const date = {
+            day,
+            month,
+            year
+        }
+
+        setDate(date);
+    }
+
     return (
         <div className={styles.scheduler_container}>
             <div>
@@ -27,7 +47,7 @@ const Scheduler = ({ monthDays, today, OpenSidePanel }: SchedulerProps) => {
                              ${typeof day === "string" ?  styles.inactive : ""}`
                         }
                         key={crypto.randomUUID()}
-                        onClick={typeof day === "number" ? () => OpenSidePanel(true) : undefined}
+                        onClick={() => handleSchedule(day)}
                     >
                         {day}
                     </li>
