@@ -4,8 +4,13 @@ import styles from "./AppointmentForm.module.css";
 // Icons
 import { FaAngleDown } from "react-icons/fa6";
 
-import { useState } from "react";
+import { ICreateAppointmentBody } from "../../types/appointment.types";
 
+import { useState } from "react";
+import { useHandleDate } from "../../hooks/useHandleDate";
+import { useHandleAppointment } from "../../hooks/useHandleAppointment";
+
+// Context
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
 
 type AppointmentType = "lembrete" | "tarefa" | "evento";
@@ -27,25 +32,28 @@ const AppointmentForm = () => {
     const toggleMinuteSelect = (): void => setIsMinuteOpen((isOpen) => !isOpen);
 
     const { date } = useDateToScheduleContext();
+    const { getMonthNumberByName } = useHandleDate();
+    const { createAppointment } = useHandleAppointment();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
-        const appointment = {
+        if(date === null) return;
+
+        const appointment: ICreateAppointmentBody = {
             title: appointmentTitle,
             type: appointmentType,
             priority: appointmentPriority,
             date: {
-                day: date ? date.day : null,
-                month: date ? date.month : null,
-                year: date ? date.year : null,
-                hour: hour ? hour : null,
-                minute: minute ? minute : null
+                day: date.day,
+                month: getMonthNumberByName(date.month),
+                year: date.year.toString()
             },
-            description: appointmentDescription
+            time: appointmentDate === "hour" ? { hour, minute } : undefined,
+            description: appointmentDescription ? appointmentDescription : undefined
         }
 
-        console.log(appointment)
+        await createAppointment(appointment);
     }
 
     const handleRadioButton = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,10 +75,14 @@ const AppointmentForm = () => {
     }
 
     const generateSelectHours = (): JSX.Element[] => {
-        const hoursArray: number[] = [];
+        const hoursArray: string[] = [];
 
         for(let i = 0; i <= 23; i++) {
-            hoursArray.push(i);
+            if(i < 10) {
+                hoursArray.push(`0${i}`);
+            } else {
+                hoursArray.push(i.toString());
+            }
         }
 
         return hoursArray.map((hour) => (
