@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 interface IHandleDate {
     getToday: () => void;
     goToDate: (month: string, year: number) => void;
+    getMonthNumberByName: (month: string) => string;
     nextMonth: () => void;
     previousMonth: () => void;
     month: string;
@@ -45,6 +46,16 @@ export function useHandleDate(): IHandleDate {
         const monthIndex: number = monthNames.indexOf(month);
         setCurrentMonthIndex(monthIndex);
         setYear(year);
+    }
+
+    const getMonthNumberByName = (month: string): string => {
+        const monthIndex:  number = monthNames.indexOf(month) + 1;
+
+        if(monthIndex < 10) {
+            return `0${monthIndex}`;
+        } else {
+            return monthIndex.toString();
+        }
     }
 
     const nextMonth = (): void => {
@@ -110,5 +121,5 @@ export function useHandleDate(): IHandleDate {
 
     }, [currentMonthIndex, year]);
 
-    return { getToday, goToDate, nextMonth, previousMonth, month, year, monthDays, today };
+    return { getToday, goToDate, getMonthNumberByName, nextMonth, previousMonth, month, year, monthDays, today };
 }
