@@ -12,3 +12,16 @@ export interface IUser {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface IAppointment {
+    id: string;
+    type: string;
+    title: string;
+    description: string | null;
+    priority: string;
+    date: Date;
+    time: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+}
