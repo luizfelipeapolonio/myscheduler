@@ -14,13 +14,21 @@ interface SchedulerProps {
 const Scheduler = ({ monthDays, today, month, year, OpenSidePanel }: SchedulerProps) => {
     const { setDate } = useDateToScheduleContext();
 
+    const formatedDay = (day: number): string => {
+        if(day < 10) {
+            return `0${day}`;
+        } else {
+            return day.toString();
+        }
+    }
+
     const handleSchedule = (day: string | number): void => {
         if(typeof day === "string") return;
 
         OpenSidePanel(true);
 
         const date = {
-            day,
+            day: formatedDay(day),
             month,
             year
         }
