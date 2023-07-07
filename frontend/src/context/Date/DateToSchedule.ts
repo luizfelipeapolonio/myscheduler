@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 export interface IDateToScheduleObject {
-    day: number;
+    day: string;
     month: string;
     year: number;
 }
