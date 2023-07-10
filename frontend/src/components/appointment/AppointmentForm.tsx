@@ -4,14 +4,19 @@ import styles from "./AppointmentForm.module.css";
 // Icons
 import { FaAngleDown } from "react-icons/fa6";
 
+// Components
+import FlashMessage from "../FlashMessage";
+
 import { ICreateAppointmentBody } from "../../types/appointment.types";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHandleDate } from "../../hooks/useHandleDate";
 import { useHandleAppointment } from "../../hooks/useHandleAppointment";
 
 // Context
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
+
+import { extractValidationMessages } from "../../utils/extractValidationMessages";
 
 type AppointmentType = "lembrete" | "tarefa" | "evento";
 type AppointmentPriority = "alta" | "media" | "baixa";
@@ -23,6 +28,7 @@ const AppointmentForm = () => {
     const [appointmentPriority, setAppointmentPriority] = useState<AppointmentPriority>("media");
     const [appointmentDate, setAppointmentDate] = useState<AppointmentDate>("default");
     const [appointmentDescription, setAppointmentDescription] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
     const [hour, setHour] = useState<string>("");
     const [minute, setMinute] = useState<string>("");
     const [isHourOpen, setIsHourOpen] = useState<boolean>(false);
@@ -33,12 +39,14 @@ const AppointmentForm = () => {
 
     const { date } = useDateToScheduleContext();
     const { getMonthNumberByName } = useHandleDate();
-    const { createAppointment } = useHandleAppointment();
+    const { createAppointment, reset, data, loading, success, error } = useHandleAppointment();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
         if(date === null) return;
+
+        reset();
 
         const appointment: ICreateAppointmentBody = {
             title: appointmentTitle,
@@ -110,10 +118,46 @@ const AppointmentForm = () => {
         ));
     }
 
+    useEffect(() => {
+        if(data) {
+            const extractedMessages: string[] | null = extractValidationMessages(data);
+
+            if(extractedMessages !== null) {
+                setMessage(extractedMessages[0]);
+            }
+
+            if(!data.message.includes("validação")){
+                setMessage(data.message);
+            }
+        }
+
+        if(!data && error) {
+            setMessage("Ocorreu um erro! Por favor, tente mais tarde!");
+        }
+
+    }, [data, error]);
+
+    useEffect(() => {
+        if(message) {
+            const timer: number = setTimeout(() => {
+                setMessage("");
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
+
     return (
         <div className={styles.appointmentForm_container}>
             <h2>Criar compromisso</h2>
             <p>Deixe agendado seus lembretes, eventos ou tarefas</p>
+            {message && (
+                <FlashMessage 
+                    message={message} 
+                    type={success ? "success" :  "error"}
+                    marginTop="1rem"
+                />
+            )}
             <form onSubmit={handleSubmit}>
                 <input 
                     type="text" 
@@ -238,7 +282,8 @@ const AppointmentForm = () => {
                     placeholder="Adicione uma descrição para o seu compromisso..."
                     onChange={(e) => setAppointmentDescription(e.target.value)}
                 />
-                <input type="submit" value="Agendar compromisso" />
+                {loading && <input type="submit" value="Aguarde..." disabled />}
+                {!loading && <input type="submit" value="Agendar compromisso" />}
             </form>
         </div>
     );
