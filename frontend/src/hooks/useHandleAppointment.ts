@@ -13,6 +13,7 @@ import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
 
 interface IHandleAppointment {
     createAppointment: (body: ICreateAppointmentBody) => Promise<void>;
+    reset: () => void;
     data: IApiResponse<IAppointment | null> | null;
     loading: boolean;
     error: boolean;
@@ -52,5 +53,11 @@ export function useHandleAppointment(): IHandleAppointment {
         }
     }
 
-    return { createAppointment, data, loading, error, success };
+    const reset = (): void => {
+        setData(null);
+        setError(false);
+        setSuccess(false);
+    }
+
+    return { createAppointment, reset, data, loading, error, success };
 }
