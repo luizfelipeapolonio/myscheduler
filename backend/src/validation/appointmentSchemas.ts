@@ -69,3 +69,14 @@ export const editAppointmentSchema = z.object({
     date: AppointmentDate.optional(),
     time: AppointmentTime
 });
+
+export const getAppointmentByDateSchema = z.object({
+    monthNumber: z.string({ required_error: "O mês é obrigatório" }).regex(new RegExp(/[0-9]{2}/g), {
+        message: "O mês deve ser no formato numérico '00'. Ex: '09'"
+    }).refine((month) => month >= "01" && month <= "12", {
+        message: "Mês inválido! O mês deve ser entre '01' e '12'"
+    }),
+    year: z.string({ required_error: "O ano é obrigatório" }).regex(new RegExp(/[0-9]{4}/), {
+        message: "O ano deve ser no formato numérico '0000'. Ex: '2023'"
+    }).refine((year) => year > "0000", { message: "Ano inválido" })
+}, { required_error: "O mês e o ano são obrigatórios" });

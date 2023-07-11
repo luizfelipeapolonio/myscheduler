@@ -5,7 +5,7 @@ import { Request } from "express";
 import { Appointment } from "@prisma/client";
 import { ITypedRequestBody, ITypedResponse, IJSONResponse } from "../types/shared.types";
 import { AuthUser } from "../types/user.types";
-import { CreateAppointmentBody, EditAppointmentBody } from "../types/appointment.types";
+import { CreateAppointmentBody, EditAppointmentBody, GetAppointmentByDateBody } from "../types/appointment.types";
 
 import Logger from "../config/logger";
 
@@ -102,6 +102,44 @@ export class AppointmentController {
                 
         } catch(error) {
             Logger.error("Erro ao buscar compromisso pelo id --> " + `Erro: ${error}`);
+            return res.status(500).json({
+                status: "error",
+                message: "Ocorreu um erro! Por favor, tente mais tarde",
+                payload: null
+            });
+        }
+    }
+
+    async getAppointmentsByDate(
+        req: ITypedRequestBody<GetAppointmentByDateBody>, 
+        res: ITypedResponse<IJSONResponse<Appointment[] | null>>
+    ) {
+        const { year, monthNumber } = req.body;
+        const authUser: AuthUser = res.locals.authUser;
+
+        try {
+            const appointments: Appointment[] = await prisma.appointment.findMany({
+                where: { userId: authUser.id }
+            });
+
+            const filteredAppointments: Appointment[] = appointments.filter((appointment) => {
+                const appointmentYear: string = appointment.date.getFullYear().toString();
+                const appointmentMonth: number = (appointment.date.getMonth() + 1);
+                const formatedMonth = appointmentMonth < 10 ? 
+                    `0${appointmentMonth}` : 
+                    appointmentMonth.toString();
+
+                return monthNumber === formatedMonth && appointmentYear === year;
+            });
+
+            return res.status(200).json({
+                status: "success",
+                message: "Compromissos encontrados",
+                payload: filteredAppointments
+            });
+
+        } catch(error) {
+            Logger.error("Erro ao buscar compromissos pela data --> " + `Erro: ${error}`);
             return res.status(500).json({
                 status: "error",
                 message: "Ocorreu um erro! Por favor, tente mais tarde",
