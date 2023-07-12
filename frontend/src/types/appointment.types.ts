@@ -13,3 +13,8 @@ export interface ICreateAppointmentBody {
     }
     description?: string;
 }
+
+export interface IGetAppointmentByDateBody {
+    monthNumber: string;
+    year: string
+}
