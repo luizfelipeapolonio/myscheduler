@@ -20,8 +20,8 @@ export class AppointmentRoutes {
         });
 
         this.router.get("/", auth.execute, appointment.getAllUserAppointments);
+        this.router.post("/", auth.execute, validation.getAppointmentByDate, appointment.getAppointmentsByDate);
         this.router.post("/appointment", auth.execute, validation.createAppointment, appointment.create);
-        this.router.get("/appointment", auth.execute, validation.getAppointmentByDate, appointment.getAppointmentsByDate);
         this.router.get("/appointment/:id", auth.execute, appointment.getAppointmentById);
         this.router.patch("/appointment/:id", auth.execute, validation.editAppointment, appointment.edit);
         this.router.delete("/appointment/:id", auth.execute, appointment.delete);
