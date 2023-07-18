@@ -1,6 +1,14 @@
 // CSS
 import styles from "./Scheduler.module.css";
 
+// Components
+import Loading from "../Loading";
+
+// Types
+import { IAppointment } from "../../types/shared.types";
+
+import { useState, useEffect } from "react";
+
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
 
 interface SchedulerProps {
@@ -8,10 +16,14 @@ interface SchedulerProps {
     today: number;
     month: string;
     year: number;
+    appointments: IAppointment[];
+    appointmentsLoading: boolean;
     OpenSidePanel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Scheduler = ({ monthDays, today, month, year, OpenSidePanel }: SchedulerProps) => {
+const Scheduler = ({ monthDays, today, month, year, appointments, appointmentsLoading, OpenSidePanel }: SchedulerProps) => {
+    const [delayedMonthDays, setDelayedMonthDays] = useState<(string | number)[]>([]);
+    
     const { setDate } = useDateToScheduleContext();
 
     const formatedDay = (day: number): string => {
@@ -36,6 +48,20 @@ const Scheduler = ({ monthDays, today, month, year, OpenSidePanel }: SchedulerPr
         setDate(date);
     }
 
+    const extractDay = (appointment: IAppointment): string => {
+        return appointment.date.toString().split("T")[0].split("-")[2];
+    }
+
+    useEffect(() => {
+        if(monthDays.length > 0) {
+            const delay = setTimeout(() => setDelayedMonthDays(monthDays), 500);
+
+            return () => clearTimeout(delay);
+        }
+    }, [monthDays, month]);
+
+    useEffect(() => setDelayedMonthDays([]), [month]);
+
     return (
         <div className={styles.scheduler_container}>
             <div>
@@ -47,20 +73,27 @@ const Scheduler = ({ monthDays, today, month, year, OpenSidePanel }: SchedulerPr
                 <span>Sex</span>
                 <span>Sáb</span>
             </div>
-            <ul>
-                {monthDays.map((day) => (
-                    <li 
-                        className={
-                            `${today === day ? styles.today : ""} 
-                             ${typeof day === "string" ?  styles.inactive : ""}`
-                        }
-                        key={crypto.randomUUID()}
-                        onClick={() => handleSchedule(day)}
-                    >
-                        {day}
-                    </li>
-                ))}
-            </ul>
+            {appointmentsLoading || delayedMonthDays.length === 0 ? <Loading type="default" /> : (
+                <ul>
+                    {delayedMonthDays.map((day) => (
+                        <li 
+                            className={
+                                `${today === day ? styles.today : ""} 
+                                ${typeof day === "string" ?  styles.inactive : ""}`
+                            }
+                            key={crypto.randomUUID()}
+                            onClick={() => handleSchedule(day)}
+                        >
+                            {day}
+                            {appointments.length > 0 && appointments.map((appointment) => (
+                                typeof day === "number" && formatedDay(day) === extractDay(appointment) && (
+                                    <p key={appointment.id}>{appointment.title}</p>
+                                )
+                            ))}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
