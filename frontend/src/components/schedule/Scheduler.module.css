@@ -1,11 +1,13 @@
 .scheduler_container {
+    display: flex;
+    flex-direction: column;
     font-size: 1.6rem;
-    height: 100%;
+    min-height: 100%;
 }
 
 .scheduler_container div:first-child {
     display: grid;
-    grid-template-columns: repeat(7, minmax(max-content, 100%));
+    grid-template-columns: repeat(7, minmax(max-content, 1fr));
     text-align: center;
     border-bottom: 1px solid #545456;
 }
@@ -18,8 +20,9 @@
 
 .scheduler_container ul {
     display: grid;
-    grid-template-columns: repeat(7, minmax(max-content, 100%));
-    height: calc(100% - 3.4rem);
+    grid-template-columns: repeat(7, calc(100% / 7));
+    grid-auto-rows: 1fr;
+    min-height: calc(100% - 3.4rem);
     text-align: center;
     list-style: none;
 }
@@ -27,19 +30,38 @@
 .scheduler_container ul li {
     position: relative;
     z-index: 1;
-    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.6rem 0.2rem 1.2rem;
     border-right: 1px solid #545456;
     border-bottom: 1px solid #545456;
+}
+
+.scheduler_container ul li span {
+    margin-bottom: 1rem;
+}
+
+.scheduler_container ul li p {
+    font-size: 1.4rem;
+    width: 100%;
+    border-radius: 10px;
+    padding: 0 0.5rem;
+    margin-bottom: 0.4rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 .scheduler_container ul .today::before {
     content: "";
     position: absolute;
-    top: 0.5rem;
+    top: 0.4rem;
     left: 50%;
     z-index: -1;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 2.8rem;
+    height: 2.8rem;
     border-radius: 50%;
     background-color: #6700ff;
     transform: translateX(-50%);
@@ -47,4 +69,16 @@
 
 .scheduler_container ul .inactive {
     color: #787878;
+}
+
+.baixa {
+    background-color: rgb(1, 146, 1);
+}
+
+.media {
+    background-color: rgb(36, 36, 250);
+}
+
+.alta {
+    background-color:rgb(197, 22, 22);
 }

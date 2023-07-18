@@ -84,10 +84,15 @@ const Scheduler = ({ monthDays, today, month, year, appointments, appointmentsLo
                             key={crypto.randomUUID()}
                             onClick={() => handleSchedule(day)}
                         >
-                            {day}
+                            <span>{day}</span>
                             {appointments.length > 0 && appointments.map((appointment) => (
                                 typeof day === "number" && formatedDay(day) === extractDay(appointment) && (
-                                    <p key={appointment.id}>{appointment.title}</p>
+                                    <p 
+                                        key={appointment.id} 
+                                        className={`${styles[appointment.priority]}`}
+                                    >
+                                        {appointment.title}
+                                    </p>
                                 )
                             ))}
                         </li>
