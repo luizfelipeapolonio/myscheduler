@@ -33,6 +33,8 @@ const Schedule = () => {
     const [goToMonth, setGoToMonth] = useState<string>("");
     const [goToYear, setGoToYear] = useState<number>(0);
     const [isSidePanelOpen, setIsSidePanelOpen] = useState<boolean>(false);
+    const [showAppointmentForm, setShowAppointmentForm] = useState<boolean>(false);
+    const [showAppointmentCard, setShowAppointmentCard] = useState<boolean>(false);
 
     useEffect(() => {
         reset();
@@ -87,10 +89,18 @@ const Schedule = () => {
                     appointments={appointments}
                     appointmentsLoading={loading}
                     OpenSidePanel={setIsSidePanelOpen}
+                    setShowAppointmentForm={setShowAppointmentForm}
+                    setShowAppointmentCard={setShowAppointmentCard}
                 />
             </main>
             {isSidePanelOpen && (
-                <SidePanel closePanel={setIsSidePanelOpen} />
+                <SidePanel 
+                    showAppointmentForm={showAppointmentForm}
+                    showAppointmentCard={showAppointmentCard}
+                    setShowAppointmentForm={setShowAppointmentForm}
+                    setShowAppointmentCard={setShowAppointmentCard}
+                    closePanel={setIsSidePanelOpen} 
+                />
             )}
         </div>
     );

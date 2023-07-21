@@ -10,6 +10,7 @@ import { IAppointment } from "../../types/shared.types";
 import { useState, useEffect } from "react";
 
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
+import { useAppointmentToEditContext } from "../../context/Appointment/AppointmentToEdit";
 
 interface SchedulerProps {
     monthDays: (number | string)[];
@@ -19,12 +20,25 @@ interface SchedulerProps {
     appointments: IAppointment[];
     appointmentsLoading: boolean;
     OpenSidePanel: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowAppointmentForm: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowAppointmentCard: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Scheduler = ({ monthDays, today, month, year, appointments, appointmentsLoading, OpenSidePanel }: SchedulerProps) => {
+const Scheduler = ({ 
+    monthDays, 
+    today, 
+    month, 
+    year, 
+    appointments, 
+    appointmentsLoading, 
+    OpenSidePanel,
+    setShowAppointmentForm,
+    setShowAppointmentCard
+}: SchedulerProps) => {
     const [delayedMonthDays, setDelayedMonthDays] = useState<(string | number)[]>([]);
     
     const { setDate } = useDateToScheduleContext();
+    const { setAppointmentToEdit } = useAppointmentToEditContext(); 
 
     const formatedDay = (day: number): string => {
         if(day < 10) {
@@ -38,6 +52,7 @@ const Scheduler = ({ monthDays, today, month, year, appointments, appointmentsLo
         if(typeof day === "string") return;
 
         OpenSidePanel(true);
+        setShowAppointmentForm(true);
 
         const date = {
             day: formatedDay(day),
@@ -46,6 +61,14 @@ const Scheduler = ({ monthDays, today, month, year, appointments, appointmentsLo
         }
 
         setDate(date);
+    }
+
+    const handleEdit = (e: React.MouseEvent<HTMLParagraphElement>, appointment: IAppointment): void => {
+        e.stopPropagation();
+        
+        OpenSidePanel(true);
+        setAppointmentToEdit(appointment);
+        setShowAppointmentCard(true);
     }
 
     const extractDay = (appointment: IAppointment): string => {
@@ -90,6 +113,7 @@ const Scheduler = ({ monthDays, today, month, year, appointments, appointmentsLo
                                     <p 
                                         key={appointment.id} 
                                         className={`${styles[appointment.priority]}`}
+                                        onClick={(e) => handleEdit(e, appointment)}
                                     >
                                         {appointment.title}
                                     </p>
