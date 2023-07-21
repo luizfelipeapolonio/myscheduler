@@ -5,12 +5,15 @@ import './index.css'
 
 import { AuthContextProvider } from "./context/Auth/AuthContextProvider.tsx";
 import { DateToScheduleProvider } from "./context/Date/DateToScheduleProvider.tsx";
+import { AppointmentToEditProvider } from "./context/Appointment/AppointmentToEditProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <AuthContextProvider>
       <DateToScheduleProvider>
-        <App />
+        <AppointmentToEditProvider>
+          <App />
+        </AppointmentToEditProvider>
       </DateToScheduleProvider>
     </AuthContextProvider>
   </React.StrictMode>,
