@@ -52,6 +52,24 @@
     font-size: 1.9rem;
 }
 
+.fade_side .side_container .edit_actions {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #545456;
+}
+
+.fade_side .side_container .edit_actions button {
+    margin: 1.5rem 0;
+    padding: 0.8rem 1rem;
+    width: 100%;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #e1e1e6;
+    background-color: #6700ff;
+    border: none;
+    border-radius: 5px;
+}
+
 @keyframes opacityEffect {
     from {
         opacity: 0;

@@ -27,6 +27,8 @@ const SidePanel = ({
 }: SidePanelProps) => {
     const { appointmentToEdit } = useAppointmentToEditContext();
 
+    const toggleEditForm = (): void => setShowAppointmentForm((show) => !show);
+
     const close = (): void => {
         closePanel(false);
         setShowAppointmentForm(false);
@@ -41,10 +43,15 @@ const SidePanel = ({
                         <FaXmark />
                     </button>
                 </header>
-                {showAppointmentForm && <AppointmentForm />}
                 {showAppointmentCard && appointmentToEdit && (
-                    <AppointmentCard appointment={appointmentToEdit} />
+                    <div className={styles.edit_actions}>
+                        <AppointmentCard appointment={appointmentToEdit} />
+                        <button type="button" onClick={toggleEditForm}>
+                            {showAppointmentForm ? "Fechar" : "Editar"}
+                        </button>
+                    </div>
                 )}
+                {showAppointmentForm && <AppointmentForm />}
             </div>
         </div>
     );
