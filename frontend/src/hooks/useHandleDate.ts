@@ -4,6 +4,7 @@ interface IHandleDate {
     getToday: () => void;
     goToDate: (month: string, year: number) => void;
     getMonthNumberByName: (month: string) => string;
+    getMonthNameByNumber: (month: string) => string;
     nextMonth: () => void;
     previousMonth: () => void;
     month: string;
@@ -56,6 +57,11 @@ export function useHandleDate(): IHandleDate {
         } else {
             return monthIndex.toString();
         }
+    }
+
+    const getMonthNameByNumber = (month: string): string => {
+        const monthNumber: number = parseInt(month);
+        return monthNames[monthNumber - 1];
     }
 
     const nextMonth = (): void => {
@@ -121,5 +127,16 @@ export function useHandleDate(): IHandleDate {
 
     }, [currentMonthIndex, year]);
 
-    return { getToday, goToDate, getMonthNumberByName, nextMonth, previousMonth, month, year, monthDays, today };
+    return { 
+        getToday, 
+        goToDate, 
+        getMonthNumberByName, 
+        getMonthNameByNumber, 
+        nextMonth, 
+        previousMonth, 
+        month, 
+        year, 
+        monthDays, 
+        today 
+    };
 }
