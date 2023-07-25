@@ -68,6 +68,11 @@
     background-color: #6700ff;
     border: none;
     border-radius: 5px;
+    transition: 0.1s ease-in-out;
+}
+
+.fade_side .side_container .edit_actions button:hover {
+    background-color: #761bff;
 }
 
 @keyframes opacityEffect {
