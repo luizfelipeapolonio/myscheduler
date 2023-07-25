@@ -25,7 +25,7 @@ const SidePanel = ({
     setShowAppointmentCard, 
     closePanel 
 }: SidePanelProps) => {
-    const { appointmentToEdit } = useAppointmentToEditContext();
+    const { appointmentToEdit, setAppointmentToEdit } = useAppointmentToEditContext();
 
     const toggleEditForm = (): void => setShowAppointmentForm((show) => !show);
 
@@ -33,6 +33,7 @@ const SidePanel = ({
         closePanel(false);
         setShowAppointmentForm(false);
         setShowAppointmentCard(false);
+        setAppointmentToEdit(null);
     }
 
     return (

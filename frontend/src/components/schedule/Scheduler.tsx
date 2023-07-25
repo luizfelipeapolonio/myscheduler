@@ -7,10 +7,16 @@ import Loading from "../Loading";
 // Types
 import { IAppointment } from "../../types/shared.types";
 
+// Hooks
 import { useState, useEffect } from "react";
+import { useHandleDate } from "../../hooks/useHandleDate";
 
+// Context
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
 import { useAppointmentToEditContext } from "../../context/Appointment/AppointmentToEdit";
+
+// Utils
+import { extractDate } from "../../utils/extractDate";
 
 interface SchedulerProps {
     monthDays: (number | string)[];
@@ -38,7 +44,9 @@ const Scheduler = ({
     const [delayedMonthDays, setDelayedMonthDays] = useState<(string | number)[]>([]);
     
     const { setDate } = useDateToScheduleContext();
-    const { setAppointmentToEdit } = useAppointmentToEditContext(); 
+    const { setAppointmentToEdit } = useAppointmentToEditContext();
+
+    const { getMonthNameByNumber } = useHandleDate();
 
     const formatedDay = (day: number): string => {
         if(day < 10) {
@@ -69,10 +77,20 @@ const Scheduler = ({
         OpenSidePanel(true);
         setAppointmentToEdit(appointment);
         setShowAppointmentCard(true);
-    }
 
-    const extractDay = (appointment: IAppointment): string => {
-        return appointment.date.toString().split("T")[0].split("-")[2];
+        const monthNumber: string = extractDate(appointment, "month");
+
+        const day: string = extractDate(appointment, "day");
+        const month: string = getMonthNameByNumber(monthNumber);
+        const year: number = parseInt(extractDate(appointment, "year"));
+
+        const date = {
+            day,
+            month,
+            year
+        }
+
+        setDate(date);
     }
 
     useEffect(() => {
@@ -109,7 +127,7 @@ const Scheduler = ({
                         >
                             <span>{day}</span>
                             {appointments.length > 0 && appointments.map((appointment) => (
-                                typeof day === "number" && formatedDay(day) === extractDay(appointment) && (
+                                typeof day === "number" && formatedDay(day) === extractDate(appointment, "day") && (
                                     <p 
                                         key={appointment.id} 
                                         className={`${styles[appointment.priority]}`}
