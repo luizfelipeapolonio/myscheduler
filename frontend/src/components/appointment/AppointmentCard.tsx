@@ -10,6 +10,8 @@ import { IAppointment } from "../../types/shared.types";
 
 import { useHandleDate } from "../../hooks/useHandleDate";
 
+import { extractDate } from "../../utils/extractDate";
+
 interface AppointmentCardProps {
     appointment: IAppointment;
 }
@@ -17,9 +19,9 @@ interface AppointmentCardProps {
 const AppointmentCard = ({ appointment }: AppointmentCardProps) => {
     const { getMonthNameByNumber } = useHandleDate();
 
-    const monthNumber: string = appointment.date.toString().split("T")[0].split("-")[1];
-    const day: string = appointment.date.toString().split("T")[0].split("-")[2];
-    const year: string = appointment.date.toString().split("T")[0].split("-")[0];
+    const monthNumber: string = extractDate(appointment, "month");
+    const day: string = extractDate(appointment, "day");
+    const year: string = extractDate(appointment, "year");
 
     const formatedDate: string = `${day} de ${getMonthNameByNumber(monthNumber)} de ${year}`;
 
