@@ -7,7 +7,7 @@ import { FaAngleDown } from "react-icons/fa6";
 // Components
 import FlashMessage from "../FlashMessage";
 
-import { ICreateAppointmentBody } from "../../types/appointment.types";
+import { ICreateAppointmentBody, IEditAppointmentBody } from "../../types/appointment.types";
 
 import { useState, useEffect } from "react";
 import { useHandleDate } from "../../hooks/useHandleDate";
@@ -15,6 +15,7 @@ import { useHandleAppointment } from "../../hooks/useHandleAppointment";
 
 // Context
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
+import { useAppointmentToEditContext } from "../../context/Appointment/AppointmentToEdit";
 
 import { extractValidationMessages } from "../../utils/extractValidationMessages";
 
@@ -39,9 +40,10 @@ const AppointmentForm = () => {
 
     const { date } = useDateToScheduleContext();
     const { getMonthNumberByName } = useHandleDate();
-    const { createAppointment, reset, data, loading, success, error } = useHandleAppointment();
+    const { createAppointment, editAppointment, reset, data, loading, success, error } = useHandleAppointment();
+    const { appointmentToEdit } = useAppointmentToEditContext();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmitCreate = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
         if(date === null) return;
@@ -62,6 +64,23 @@ const AppointmentForm = () => {
         }
 
         await createAppointment(appointment);
+    }
+
+    const handleSubmitEdit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+        e.preventDefault();
+
+        if(appointmentToEdit === null) return;
+
+        const appointment: IEditAppointmentBody = {
+            appointmentId: appointmentToEdit.id,
+            title: appointmentTitle,
+            type: appointmentType,
+            priority: appointmentPriority,
+            time: appointmentDate === "hour" ? { hour, minute } : undefined,
+            description: appointmentDescription ? appointmentDescription : undefined
+        }
+
+        await editAppointment(appointment);
     }
 
     const handleRadioButton = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -138,6 +157,18 @@ const AppointmentForm = () => {
     }, [data, error]);
 
     useEffect(() => {
+        if(appointmentToEdit) {
+            setAppointmentTitle(appointmentToEdit.title);
+            setAppointmentType(appointmentToEdit.type as AppointmentType);
+            setAppointmentPriority(appointmentToEdit.priority as AppointmentPriority);
+            setAppointmentDate(appointmentToEdit.time ? "hour" : "default");
+            setHour(appointmentToEdit.time ? appointmentToEdit.time.split(":")[0] : "");
+            setMinute(appointmentToEdit.time ? appointmentToEdit.time.split(":")[1] : "");
+            setAppointmentDescription(appointmentToEdit.description || "");
+        }
+    }, [appointmentToEdit]);
+
+    useEffect(() => {
         if(message) {
             const timer: number = setTimeout(() => {
                 setMessage("");
@@ -149,8 +180,10 @@ const AppointmentForm = () => {
 
     return (
         <div className={styles.appointmentForm_container}>
-            <h2>Criar compromisso</h2>
-            <p>Deixe agendado seus lembretes, eventos ou tarefas</p>
+            {appointmentToEdit ? <h2>Editar compromisso</h2> : <h2>Criar compromisso</h2>}
+            {appointmentToEdit ? <p>Edite o compromisso já agendado</p> : 
+                <p>Deixe agendado seus lembretes, eventos ou tarefas</p>
+            }
             {message && (
                 <FlashMessage 
                     message={message} 
@@ -158,10 +191,11 @@ const AppointmentForm = () => {
                     marginTop="1rem"
                 />
             )}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={appointmentToEdit? handleSubmitEdit : handleSubmitCreate}>
                 <input 
                     type="text" 
                     placeholder="Dê um título para o seu compromisso"
+                    value={appointmentTitle}
                     onChange={(e) => setAppointmentTitle(e.target.value)}
                 />
                 <fieldset className={styles.appointment_type}>
@@ -171,8 +205,8 @@ const AppointmentForm = () => {
                             name="type" 
                             type="radio" 
                             value="lembrete" 
-                            onChange={handleRadioButton} 
-                            defaultChecked 
+                            checked={appointmentType === "lembrete"}
+                            onChange={handleRadioButton}
                         />
                         <span>Lembrete</span>
                     </label>
@@ -180,7 +214,8 @@ const AppointmentForm = () => {
                         <input 
                             name="type" 
                             type="radio" 
-                            value="tarefa" 
+                            value="tarefa"
+                            checked={appointmentType === "tarefa"}
                             onChange={handleRadioButton} 
                         />
                         <span>Tarefa</span>
@@ -190,6 +225,7 @@ const AppointmentForm = () => {
                             name="type" 
                             type="radio" 
                             value="evento"
+                            checked={appointmentType === "evento"}
                             onChange={handleRadioButton}
                         />
                         <span>Evento</span>
@@ -201,7 +237,8 @@ const AppointmentForm = () => {
                         <input 
                             name="priority" 
                             type="radio" 
-                            value="alta" 
+                            value="alta"
+                            checked={appointmentPriority === "alta"}
                             onChange={handleRadioButton}
                         />
                         <span>Alta</span>
@@ -211,8 +248,8 @@ const AppointmentForm = () => {
                             name="priority" 
                             type="radio" 
                             value="media"
+                            checked={appointmentPriority === "media"}
                             onChange={handleRadioButton}
-                            defaultChecked 
                         />
                         <span>Média</span>
                     </label>
@@ -221,6 +258,7 @@ const AppointmentForm = () => {
                             name="priority" 
                             type="radio" 
                             value="baixa"
+                            checked={appointmentPriority === "baixa"}
                             onChange={handleRadioButton}
                         />
                         <span>Baixa</span>
@@ -234,8 +272,8 @@ const AppointmentForm = () => {
                                 name="date" 
                                 type="radio" 
                                 value="default"
+                                checked={appointmentDate === "default"}
                                 onChange={handleRadioButton} 
-                                defaultChecked 
                             />
                             <span>O dia inteiro</span>
                         </label>
@@ -244,6 +282,7 @@ const AppointmentForm = () => {
                                 name="date" 
                                 type="radio" 
                                 value="hour"
+                                checked={appointmentDate === "hour"}
                                 onChange={handleRadioButton}
                             />
                             <span>Adicionar horário</span>
@@ -280,10 +319,16 @@ const AppointmentForm = () => {
                 <textarea 
                     rows={4} 
                     placeholder="Adicione uma descrição para o seu compromisso..."
+                    value={appointmentDescription}
                     onChange={(e) => setAppointmentDescription(e.target.value)}
                 />
                 {loading && <input type="submit" value="Aguarde..." disabled />}
-                {!loading && <input type="submit" value="Agendar compromisso" />}
+                {!loading && (
+                    <input 
+                        type="submit" 
+                        value={appointmentToEdit ? "Salvar" : "Agendar compromisso"} 
+                    />
+                )}
             </form>
         </div>
     );

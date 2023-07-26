@@ -1,12 +1,12 @@
 // Types
 import { IApiResponse, IAppointment } from "../types/shared.types";
 import { ISignedUser } from "../types/user.types";
-import { ICreateAppointmentBody, IGetAppointmentByDateBody } from "../types/appointment.types";
+import { ICreateAppointmentBody, IEditAppointmentBody, IGetAppointmentByDateBody } from "../types/appointment.types";
 
 import { useState } from "react";
 
 // Services
-import { create, getByDate } from "../services/appointmentService";
+import { create, edit, getByDate } from "../services/appointmentService";
 
 // Utils
 import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
@@ -16,6 +16,7 @@ type AppointmentResponse = IAppointment | IAppointment[];
 interface IHandleAppointment {
     createAppointment: (body: ICreateAppointmentBody) => Promise<void>;
     getAppointmentsByDate: (body: IGetAppointmentByDateBody) => Promise<void>;
+    editAppointment: (body: IEditAppointmentBody) => Promise<void>;
     reset: () => void;
     data: IApiResponse<AppointmentResponse | null> | null;
     loading: boolean;
@@ -83,11 +84,51 @@ export function useHandleAppointment(): IHandleAppointment {
         }
     }
 
+    const editAppointment = async (body: IEditAppointmentBody): Promise<void> => {
+        const localStorageUser: ISignedUser | null = getUserFromLocalStorage();
+
+        if(localStorageUser === null) {
+            setError(true);
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const editAppointmentResponse = await edit(body, localStorageUser.token);
+            
+            if(editAppointmentResponse === null) setError(true);
+            if(editAppointmentResponse && editAppointmentResponse.status === "error") {
+                setError(true);
+            }
+            if(editAppointmentResponse && editAppointmentResponse.status === "success") {
+                setSuccess(true);
+            }
+
+            setData(editAppointmentResponse);
+
+        } catch(error) {
+            console.log("Erro ao editar compromisso --> hook ", error);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const reset = (): void => {
         setData(null);
         setError(false);
         setSuccess(false);
     }
 
-    return { createAppointment, getAppointmentsByDate, reset, data, loading, error, success };
+    return { 
+        createAppointment, 
+        getAppointmentsByDate, 
+        editAppointment, 
+        reset, 
+        data, 
+        loading, 
+        error, 
+        success 
+    };
 }
