@@ -148,9 +148,8 @@ export class AppointmentController {
         }
     }
 
-    async edit(req: Request<{ id: string }, {}, EditAppointmentBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
-        const { id } = req.params;
-        const { title, type, description, priority, date, time } = req.body;
+    async edit(req: ITypedRequestBody<EditAppointmentBody>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+        const { appointmentId, title, type, description, priority, date, time } = req.body;
         const authUser: AuthUser = res.locals.authUser;
 
         let formatedDate: Date | undefined = undefined;
@@ -158,7 +157,7 @@ export class AppointmentController {
 
         try {
             const appointment: Appointment | null = await prisma.appointment.findFirst({
-                where: { id }
+                where: { id: appointmentId }
             });
 
             if(!appointment) {

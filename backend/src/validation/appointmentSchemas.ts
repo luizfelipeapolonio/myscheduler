@@ -62,6 +62,7 @@ export const createAppointmentSchema = z.object({
 });
 
 export const editAppointmentSchema = z.object({
+    appointmentId: z.string({ required_error: "O id do compromisso é obrigatório" }),
     type: AppointmentType.optional(),
     title: z.string().min(1, { message: "O título deve ter no mínimo 1 caractere" }).optional(),
     description: z.string().optional(),
