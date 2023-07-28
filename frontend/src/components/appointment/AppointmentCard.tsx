@@ -54,9 +54,15 @@ const AppointmentCard = ({ appointment }: AppointmentCardProps) => {
                 )}
                 {appointment.description && (
                     <div className={styles.description}>
-                        <FaAlignJustify />
-                        <span>Descrição: </span>
-                        <p>{appointment.description}</p>
+                        <div>
+                            <FaAlignJustify />
+                            <span>Descrição: </span>
+                        </div>
+                        <textarea 
+                            value={appointment.description} 
+                            rows={4} 
+                            readOnly 
+                        />
                     </div>
                 )}
             </div>
