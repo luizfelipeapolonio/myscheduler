@@ -8,6 +8,7 @@ import { FaAngleDown } from "react-icons/fa6";
 import FlashMessage from "../FlashMessage";
 
 import { ICreateAppointmentBody, IEditAppointmentBody } from "../../types/appointment.types";
+import { IAppointment } from "../../types/shared.types";
 
 import { useState, useEffect } from "react";
 import { useHandleDate } from "../../hooks/useHandleDate";
@@ -16,6 +17,7 @@ import { useHandleAppointment } from "../../hooks/useHandleAppointment";
 // Context
 import { useDateToScheduleContext } from "../../context/Date/DateToSchedule";
 import { useAppointmentToEditContext } from "../../context/Appointment/AppointmentToEdit";
+import { useAppointmentStatusContext } from "../../context/Appointment/AppointmentStatus";
 
 import { extractValidationMessages } from "../../utils/extractValidationMessages";
 
@@ -41,7 +43,8 @@ const AppointmentForm = () => {
     const { date } = useDateToScheduleContext();
     const { getMonthNumberByName } = useHandleDate();
     const { createAppointment, editAppointment, reset, data, loading, success, error } = useHandleAppointment();
-    const { appointmentToEdit } = useAppointmentToEditContext();
+    const { appointmentToEdit, setAppointmentToEdit } = useAppointmentToEditContext();
+    const { setCreated, setEdited } = useAppointmentStatusContext();
 
     const handleSubmitCreate = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
@@ -152,6 +155,17 @@ const AppointmentForm = () => {
 
         if(!data && error) {
             setMessage("Ocorreu um erro! Por favor, tente mais tarde!");
+        }
+
+        if(data && success) {
+            if(data.message.includes("criado")) {
+                setCreated(true);
+            }
+
+            if(data.message.includes("editado")) {
+                setEdited(true);
+                setAppointmentToEdit(data.payload as IAppointment);
+            }
         }
 
     }, [data, error]);

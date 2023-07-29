@@ -14,6 +14,8 @@ import { useHandleUser } from "../../hooks/useHandleUser";
 import { useHandleDate } from "../../hooks/useHandleDate";
 import { useHandleAppointment } from "../../hooks/useHandleAppointment";
 
+import { useAppointmentStatusContext } from "../../context/Appointment/AppointmentStatus";
+
 const Schedule = () => {
     const { reset } = useHandleUser();
     const {
@@ -27,7 +29,9 @@ const Schedule = () => {
         monthDays, 
         today 
     } = useHandleDate();
-    const { getAppointmentsByDate, data, reset: resetAppointments, loading } = useHandleAppointment();
+    const { getAppointmentsByDate, data, loading } = useHandleAppointment();
+
+    const { created, edited, setCreated, setEdited } = useAppointmentStatusContext();
 
     const [appointments, setAppointments] = useState<IAppointment[]>([]);
     const [goToMonth, setGoToMonth] = useState<string>("");
@@ -54,9 +58,6 @@ const Schedule = () => {
                 year:  year.toString()
             });
         }
-
-        resetAppointments();
-        setAppointments([]);
     }, [month]);
 
     useEffect(() => {
@@ -66,6 +67,29 @@ const Schedule = () => {
             }
         }
     }, [data]);
+
+    useEffect(() => {
+        if(edited) {
+            getAppointmentsByDate({ 
+                monthNumber: getMonthNumberByName(month), 
+                year:  year.toString()
+            });
+
+            setEdited(false);
+        }
+
+        if(created) {
+            getAppointmentsByDate({ 
+                monthNumber: getMonthNumberByName(month), 
+                year:  year.toString()
+            });
+
+            setCreated(false);
+        }
+    }, [created, edited]);
+
+    // console.log("EDITED CONTEXT: ", edited);
+    console.log("CREATED CONTEXT: ", created);
 
     return (
         <div className={styles.schedule_container}>
