@@ -75,3 +75,26 @@ export const edit = async (
         return null;
     }
 }
+
+export const exclude = async (
+    body: { id: string }, 
+    token: string): Promise<IApiResponse<IAppointment | null> | null> => {
+    try {
+        const response = await fetch(api + "/appointments/appointment", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data: IApiResponse<IAppointment | null> = await response.json();
+
+        return data;
+
+    } catch(error) {
+        console.log("Erro ao deletar compromisso --> ", error);
+        return null;
+    }
+}

@@ -31,7 +31,7 @@ const Schedule = () => {
     } = useHandleDate();
     const { getAppointmentsByDate, data, loading } = useHandleAppointment();
 
-    const { created, edited, setCreated, setEdited } = useAppointmentStatusContext();
+    const { created, edited, deleted, setCreated, setEdited, setDeleted } = useAppointmentStatusContext();
 
     const [appointments, setAppointments] = useState<IAppointment[]>([]);
     const [goToMonth, setGoToMonth] = useState<string>("");
@@ -86,10 +86,17 @@ const Schedule = () => {
 
             setCreated(false);
         }
-    }, [created, edited]);
 
-    // console.log("EDITED CONTEXT: ", edited);
-    console.log("CREATED CONTEXT: ", created);
+        if(deleted) {
+            getAppointmentsByDate({
+                monthNumber: getMonthNumberByName(month), 
+                year:  year.toString()
+            });
+
+            setDeleted(false);
+        }
+
+    }, [created, edited, deleted]);
 
     return (
         <div className={styles.schedule_container}>

@@ -8,7 +8,10 @@ import { FaXmark } from "react-icons/fa6";
 import AppointmentForm from "../appointment/AppointmentForm";
 import AppointmentCard from "../appointment/AppointmentCard";
 
+import { useHandleAppointment } from "../../hooks/useHandleAppointment";
+
 import { useAppointmentToEditContext } from "../../context/Appointment/AppointmentToEdit";
+import { useAppointmentStatusContext } from "../../context/Appointment/AppointmentStatus";
 
 interface SidePanelProps {
     showAppointmentForm: boolean;
@@ -22,10 +25,13 @@ const SidePanel = ({
     showAppointmentForm, 
     showAppointmentCard, 
     setShowAppointmentForm, 
-    setShowAppointmentCard, 
+    setShowAppointmentCard,
     closePanel 
 }: SidePanelProps) => {
     const { appointmentToEdit, setAppointmentToEdit } = useAppointmentToEditContext();
+    const { setDeleted } = useAppointmentStatusContext();
+
+    const { deleteAppointment } = useHandleAppointment();
 
     const toggleEditForm = (): void => setShowAppointmentForm((show) => !show);
 
@@ -34,6 +40,12 @@ const SidePanel = ({
         setShowAppointmentForm(false);
         setShowAppointmentCard(false);
         setAppointmentToEdit(null);
+    }
+
+    const excludeAppointment = async (body: { id: string }): Promise<void> => {
+        await deleteAppointment(body);
+        setDeleted(true);
+        close();
     }
 
     return (
@@ -47,9 +59,17 @@ const SidePanel = ({
                 {showAppointmentCard && appointmentToEdit && (
                     <div className={styles.edit_actions}>
                         <AppointmentCard appointment={appointmentToEdit} />
-                        <button type="button" onClick={toggleEditForm}>
-                            {showAppointmentForm ? "Fechar" : "Editar"}
-                        </button>
+                        <div className={styles.buttons}>
+                            <button type="button" onClick={toggleEditForm}>
+                                {showAppointmentForm ? "Fechar" : "Editar"}
+                            </button>
+                            <button 
+                                type="button" 
+                                onClick={() => excludeAppointment({ id: appointmentToEdit.id })}
+                            >
+                                Excluir
+                            </button>
+                        </div>
                     </div>
                 )}
                 {showAppointmentForm && <AppointmentForm />}
