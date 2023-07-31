@@ -23,8 +23,8 @@ export class AppointmentRoutes {
         this.router.post("/", auth.execute, validation.getAppointmentByDate, appointment.getAppointmentsByDate);
         this.router.post("/appointment", auth.execute, validation.createAppointment, appointment.create);
         this.router.patch("/appointment", auth.execute, validation.editAppointment, appointment.edit);
+        this.router.delete("/appointment", auth.execute, appointment.delete);
         this.router.get("/appointment/:id", auth.execute, appointment.getAppointmentById);
-        this.router.delete("/appointment/:id", auth.execute, appointment.delete);
         
         return this.router;
     }

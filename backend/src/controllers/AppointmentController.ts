@@ -213,8 +213,8 @@ export class AppointmentController {
         }
     }
 
-    async delete(req: Request<{ id: string }>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
-        const { id } = req.params;
+    async delete(req: Request<{}, {}, { id: string }>, res: ITypedResponse<IJSONResponse<Appointment | null>>) {
+        const { id } = req.body;
         const authUser: AuthUser = res.locals.authUser;
 
         try {
