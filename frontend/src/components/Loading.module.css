@@ -6,26 +6,52 @@
     width: 100%;
 }
 
+.loading_container .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading_container .spinner::after {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    border-color: #954dff transparent #954dff transparent;
+    animation: SpinnerAnimation 1s linear infinite;
+}
+
 .default {
     background: transparent;
     margin: auto 0;
 }
+
+.default ::after {
+    width: 4rem;
+    height: 4rem;
+    border: 7px solid #954dff;
+}
+
 
 .full {
     height: 100vh;
     background-color: #0b0b0d;
 }
 
-.default img {
+.full ::after {
     width: 6rem;
     height: 6rem;
-}
-
-.full img {
-    width: 9rem;
-    height: 9rem;
+    border: 9px solid #954dff;
 }
 
 .full p {
     font-size: 2.5rem;
+}
+
+@keyframes SpinnerAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

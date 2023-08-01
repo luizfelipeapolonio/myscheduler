@@ -8,7 +8,7 @@ interface LoadingProps {
 const Loading = ({ type }: LoadingProps) => {
     return (
         <div className={`${styles.loading_container} ${styles[type]}`}>
-            <img src="/loading.svg" alt="Animação de carregamento" />
+            <div className={styles.spinner}></div>
             {type === "full" && <p>Carregando...</p>}
         </div>
     );
