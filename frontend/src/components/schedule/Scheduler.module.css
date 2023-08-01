@@ -5,14 +5,14 @@
     min-height: 100%;
 }
 
-.scheduler_container div:first-child {
+.scheduler_container .week_days {
     display: grid;
     grid-template-columns: repeat(7, minmax(max-content, 1fr));
     text-align: center;
     border-bottom: 1px solid #545456;
 }
 
-.scheduler_container div:first-child span {
+.scheduler_container .week_days span {
     color: #954dff;
     font-weight: 600;
     padding: 0.4rem;
