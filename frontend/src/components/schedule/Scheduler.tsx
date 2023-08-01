@@ -105,7 +105,7 @@ const Scheduler = ({
 
     return (
         <div className={styles.scheduler_container}>
-            <div>
+            <div className={styles.week_days}>
                 <span>Dom</span>
                 <span>Seg</span>
                 <span>Ter</span>
