@@ -98,3 +98,22 @@ export const exclude = async (
         return null;
     }
 }
+
+export const getAllUserAppointments = async (token: string): Promise<IApiResponse<IAppointment[] | null> | null> => {
+    try {
+        const response = await fetch(api + "/appointments", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data: IApiResponse<IAppointment[] | null> = await response.json();
+
+        return data;
+
+    } catch(error) {
+        console.log("Erro ao buscar todos os compromissos --> ", error);
+        return null;
+    }
+}

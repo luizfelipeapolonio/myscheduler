@@ -6,7 +6,7 @@ import { ICreateAppointmentBody, IEditAppointmentBody, IGetAppointmentByDateBody
 import { useState } from "react";
 
 // Services
-import { create, edit, getByDate, exclude } from "../services/appointmentService";
+import { create, edit, getByDate, exclude, getAllUserAppointments } from "../services/appointmentService";
 
 // Utils
 import { getUserFromLocalStorage } from "../utils/getUserFromLocalStorage";
@@ -18,6 +18,7 @@ interface IHandleAppointment {
     getAppointmentsByDate: (body: IGetAppointmentByDateBody) => Promise<void>;
     editAppointment: (body: IEditAppointmentBody) => Promise<void>;
     deleteAppointment: (body: { id: string }) => Promise<void>;
+    getAllAppointments: () => Promise<void>;
     reset: () => void;
     data: IApiResponse<AppointmentResponse | null> | null;
     loading: boolean;
@@ -147,6 +148,37 @@ export function useHandleAppointment(): IHandleAppointment {
         }
     }
 
+    const getAllAppointments = async (): Promise<void> => {
+        const localStorageUser: ISignedUser | null = getUserFromLocalStorage();
+
+        if(localStorageUser === null) {
+            setError(true);
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const getAllAppointmentsResponse = await getAllUserAppointments(localStorageUser.token);
+
+            if(getAllAppointmentsResponse === null) setError(true);
+            if(getAllAppointmentsResponse && getAllAppointmentsResponse.status === "error") {
+                setError(true);
+            }
+            if(getAllAppointmentsResponse && getAllAppointmentsResponse.status === "success") {
+                setSuccess(true);
+            }
+
+            setData(getAllAppointmentsResponse);
+
+        } catch(error) {
+            console.log("Erro ao buscar todos os compromissos --> hook ", error);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const reset = (): void => {
         setData(null);
         setError(false);
@@ -157,7 +189,8 @@ export function useHandleAppointment(): IHandleAppointment {
         createAppointment, 
         getAppointmentsByDate, 
         editAppointment,
-        deleteAppointment, 
+        deleteAppointment,
+        getAllAppointments,
         reset, 
         data, 
         loading, 
