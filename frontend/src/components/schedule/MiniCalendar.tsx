@@ -19,7 +19,10 @@ const MiniCalendar = ({ setMonth, setYear }: MiniCalendarProps) => {
     return (
         <div className={styles.miniCalendar_container}>
             <header>
-                <span>{month} de {year}</span>
+                {!month || !year ? 
+                    <span>Carregando...</span> : 
+                    <span>{month} de {year}</span>
+                }
                 <div className={styles.actions}>
                     <button type="button" onClick={getToday}>Hoje</button>
                     <button type="button" onClick={previousMonth}>{"<"}</button>
