@@ -48,6 +48,9 @@ const Schedule = () => {
     useEffect(() => {
         if(goToMonth.length > 0 && goToYear !== 0) {
             goToDate(goToMonth, goToYear);
+
+            setGoToMonth("");
+            setGoToYear(0);
         }
     }, [goToMonth, goToYear]);
 
@@ -110,7 +113,10 @@ const Schedule = () => {
                         <button type="button" onClick={getToday}>Hoje</button>
                         <button type="button" onClick={nextMonth}>{">"}</button>
                     </div>
-                    <span>{month} de {year}</span>
+                    {!month || !year ? 
+                        <span>Carregando...</span> : 
+                        <span>{month} de {year}</span>
+                    }
                 </header>
                 <Scheduler
                     monthDays={monthDays} 

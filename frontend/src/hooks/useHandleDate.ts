@@ -22,7 +22,7 @@ export function useHandleDate(): IHandleDate {
     const [month, setMonth] = useState<string>("");
     const [year, setYear] = useState<number>(0);
     const [monthDays, setMonthDays] = useState<(number | string)[]>([]);
-    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
+    const [currentMonthIndex, setCurrentMonthIndex] = useState<number | null>(null);
     const [today, setToday] = useState<number>(0);
 
     const date = new Date();
@@ -65,14 +65,18 @@ export function useHandleDate(): IHandleDate {
     }
 
     const nextMonth = (): void => {
-        setCurrentMonthIndex((currentMonth) => currentMonth + 1);
+        if(currentMonthIndex === null) return;
+        setCurrentMonthIndex(currentMonthIndex + 1);
     }
 
     const previousMonth = (): void => {
-        setCurrentMonthIndex((currentMonth) => currentMonth - 1);
+        if(currentMonthIndex === null) return;
+        setCurrentMonthIndex(currentMonthIndex - 1);
     }
 
     const allMonthDays = (): void => {
+        if(currentMonthIndex === null) return;
+
         const lastDayOfMonth = new Date(year, currentMonthIndex + 1, 0).getDate();
         const lastDayOfPreviousMonth = new Date(year, currentMonthIndex, 0).getDate();
         const firstWeekDayOfMonth = new Date(year, currentMonthIndex, 1).getDay();
@@ -112,6 +116,8 @@ export function useHandleDate(): IHandleDate {
     }, []);
     
     useEffect(() => {
+        if(currentMonthIndex === null) return;
+
         setToday(0);
         setMonth(monthNames[currentMonthIndex]);
         allMonthDays();
