@@ -104,6 +104,7 @@ export const getAllUserAppointments = async (token: string): Promise<IApiRespons
         const response = await fetch(api + "/appointments", {
             method: "GET",
             headers: {
+                "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             }
         });
