@@ -4,17 +4,31 @@
 }
 
 .schedule_container aside {
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
     border-right: 1px solid #545456;
     padding: 0 1rem;
-    max-width: 350px;
+    width: 35%;
 }
 
 .schedule_container main {
     display: flex;
     flex-direction: column;
-    flex-grow: 5;
+    width: 65%;
     overflow: auto;
+}
+
+.schedule_container main::-webkit-scrollbar {
+    width: 0.8rem;
+}
+
+.schedule_container main::-webkit-scrollbar-track {
+    border-radius: 5px;
+}
+
+.schedule_container main::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
 }
 
 .schedule_container .header_actions {
