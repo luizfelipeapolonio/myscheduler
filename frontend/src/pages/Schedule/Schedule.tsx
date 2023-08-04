@@ -5,6 +5,7 @@ import styles from "./Schedule.module.css";
 import MiniCalendar from "../../components/schedule/MiniCalendar";
 import Scheduler from "../../components/schedule/Scheduler";
 import SidePanel from "../../components/schedule/SidePanel";
+import AppointmentsList from "../../components/appointment/AppointmentsList";
 
 // Types
 import { IAppointment } from "../../types/shared.types";
@@ -105,6 +106,10 @@ const Schedule = () => {
         <div className={styles.schedule_container}>
             <aside>
                 <MiniCalendar setMonth={setGoToMonth} setYear={setGoToYear} />
+                <AppointmentsList 
+                    setShowSidePanel={setIsSidePanelOpen} 
+                    setShowAppointmentCard={setShowAppointmentCard} 
+                />
             </aside>
             <main>
                 <header className={styles.header_actions}>
