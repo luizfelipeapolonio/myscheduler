@@ -33,9 +33,7 @@ const AppointmentsList = ({ setShowSidePanel, setShowAppointmentCard }: Appointm
     }, [data]);
 
     useEffect(() => {
-        if(created) getAllAppointments();
-        if(edited) getAllAppointments();
-        if(deleted) getAllAppointments();
+        if(created || edited || deleted) getAllAppointments();
     }, [created, edited, deleted]);
 
     const showAppointment = (appointment: IAppointment): void => {
