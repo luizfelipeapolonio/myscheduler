@@ -124,12 +124,9 @@ export class AppointmentController {
 
             const filteredAppointments: Appointment[] = appointments.filter((appointment) => {
                 const appointmentYear: string = appointment.date.getFullYear().toString();
-                const appointmentMonth: number = (appointment.date.getMonth() + 1);
-                const formatedMonth = appointmentMonth < 10 ? 
-                    `0${appointmentMonth}` : 
-                    appointmentMonth.toString();
-
-                return monthNumber === formatedMonth && appointmentYear === year;
+                const appointmentMonth: string = appointment.date.toJSON().split("T")[0].split("-")[1];
+                
+                return monthNumber === appointmentMonth && appointmentYear === year;
             });
 
             return res.status(200).json({
