@@ -103,7 +103,7 @@ const EditProfile = () => {
                             <FlashMessage 
                                 type={success ? "success" : "error"}
                                 message={message}
-                                marginBottom="2rem"
+                                marginBottom="0.8rem"
                             />
                         )}
                         <label>
